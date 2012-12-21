@@ -1,0 +1,36 @@
+<div class="form-inline">
+
+  <%= select_tag :application_name, 
+                 options_for_select( @applications, cookies['selected_application_name'] ), 
+                 {:prompt => 'All Applications'} %>
+  <%= select_tag :environment_name, 
+                 options_for_select( @environments, cookies['selected_environment_name'] ),
+                 {:prompt => 'All Environments'} %>
+
+</div>
+
+<div id="log-console">
+
+<% @events.each do |event| %>
+
+    <div class='event <%= (event.log_level || "").downcase() %>'> 
+
+        <div class='event-date'>
+            <%= event.timestamp.strftime("%Y-%M-%d %H:%M:%S %z") unless event.timestamp.nil? %>
+        </div> 
+
+        <div class='event-level'><%= event.log_level %></div> 
+
+        <div class='event-app-name'><%= event.application_name %></div> 
+
+        <div class='event-environment'><%= event.environment_name %></div>
+
+        <div class='event-source-ip'><%= event.ip_address %></div>
+
+        <div class='event-message'><%= event.message %></div>
+
+    </div>
+
+<% end %>
+
+</div>

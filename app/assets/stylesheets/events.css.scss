@@ -1,0 +1,21 @@
+// Place all the styles related to the Events controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.form-inline { padding: 0 14px; margin-bottom: 14px; }
+
+#log-console { border: 1px solid #999; padding: 14px; border-radius: 8px; background-color: #19273C; }
+
+#log-console .event { font-family: "Courier New", Courier, monospace; font-size: 14px; margin-bottom: 6px; color: #999; }
+#log-console .event .event-date { display: inline-block; width: 200px; }
+#log-console .event .event-level { display: inline-block; width: 60px; font-weight: bold; }
+#log-console .event .event-app-name { display: inline-block; text-decoration: underline; }
+#log-console .event .event-environment { display: inline-block; font-style: italic; }
+#log-console .event .event-source-ip { display: inline-block; }
+#log-console .event .event-message { display: block; padding: 2px 0;}
+
+
+#log-console .event.info  { color: #44AAFE; }
+#log-console .event.warn  { color: #F1D347; }
+#log-console .event.error { color: #F7948A; }

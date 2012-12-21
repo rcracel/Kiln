@@ -1,0 +1,27 @@
+defaults: &defaults
+  host: 127.0.0.1
+  port: 27017
+
+development:
+  <<: *defaults
+  database: kiln_development
+
+test:
+  <<: *defaults
+  database: kiln_test
+
+# set these environment variables on your prod server
+production:
+  <<: *defaults
+  database: kiln
+  username: <%= ENV['MONGO_USERNAME'] %>
+  password: <%= ENV['MONGO_PASSWORD'] %>
+
+# MongoMapper.connection = Mongo::Connection.new('localhost', 27017)
+# MongoMapper.database = "#espacio-#{Rails.env}"
+
+# if defined?(PhusionPassenger)
+#    PhusionPassenger.on_event(:starting_worker_process) do |forked|
+#      MongoMapper.connection.connect if forked
+#    end
+# end
