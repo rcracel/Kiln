@@ -59,7 +59,8 @@ Kiln::Application.routes.draw do
 
   match '/authenticate' => 'sessions#create', :as => :authenticate
 
-  match '/account' => 'account#index',    :as => :user_account
+  match '/account' => 'account#edit',    :as => :user_account, :via => :get
+  match '/account' => 'account#update',  :as => :user_account, :via => :put
 
   match '/dashboard' => 'welcome#index', :as => :dashboard
 

@@ -1,22 +1,32 @@
 <div class="form-inline">
 
-  <%= select_tag :application_name, 
-                 options_for_select( @applications, cookies['selected_application_name'] ), 
-                 {:prompt => 'All Applications'} %>
-  <%= select_tag :environment_name, 
-                 options_for_select( @environments, cookies['selected_environment_name'] ),
-                 {:prompt => 'All Environments'} %>
+    <%= select_tag :application_name, 
+                    options_for_select( @applications, cookies['selected_application_name'] ), 
+                    {:prompt => 'All Applications'} %>
+    <%= select_tag :environment_name, 
+                    options_for_select( @environments, cookies['selected_environment_name'] ),
+                    {:prompt => 'All Environments'} %>
+    <%= select_tag :log_level,
+                    options_for_select( @log_levels, cookies['selected_log_level'] ),
+                    {:prompt => 'All Levels' } %>
+
+    <!--
+    <%= text_field_tag :from_date, params[ :from_date ], :placeholder => "From", :class => "span2" %>
+    <%= text_field_tag :to_date, params[ :to_date ], :placeholder => "To", :class => "span2" %>
+
+    <%= button_tag "Apply", :class => "btn btn-primary" %>
+    -->
 
 </div>
 
 <div id="log-console">
 
-<% @events.each do |event| %>
+    <% @events.each do |event| %>
 
     <div class='event <%= (event.log_level || "").downcase() %>'> 
 
         <div class='event-date'>
-            <%= event.timestamp.strftime("%Y-%M-%d %H:%M:%S %z") unless event.timestamp.nil? %>
+            <%= apply_timezone( event.timestamp ).strftime("%Y-%M-%d %H:%M:%S %z") unless event.timestamp.nil? %>
         </div> 
 
         <div class='event-level'><%= event.log_level %></div> 
@@ -31,6 +41,6 @@
 
     </div>
 
-<% end %>
+    <% end %>
 
 </div>

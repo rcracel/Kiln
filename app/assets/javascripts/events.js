@@ -12,5 +12,10 @@ $(function() {
         set_cookie( "selected_environment_name", environment_name, null );
         window.location.reload()
     });
+    $("#log_level").change( function() {
+        var log_level = $("#log_level").val();
+        set_cookie( "selected_log_level", log_level, null );
+        window.location.reload();
+    });
 
 });

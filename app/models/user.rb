@@ -3,11 +3,13 @@ class User
     include MongoMapper::Document
     include ActiveModel::SecurePassword
 
-    attr_accessible :email, :password, :password_confirmation
+    attr_accessible :email, :password, :password_confirmation, :timezone
 
     key :email,           String
     key :role,            String
     key :password_digest, String
+
+    key :timezone,        String
 
     timestamps!
 
