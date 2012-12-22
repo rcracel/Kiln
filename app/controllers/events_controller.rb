@@ -8,6 +8,7 @@ class EventsController < ApplicationController
         selected_application = cookies[ :selected_application_name ]
         selected_environment = cookies[ :selected_environment_name ]
         selected_log_level   = cookies[ :selected_log_level ]
+        selected_date_from   = cookies[ :selected_date_from ]
 
         options = { :order => "timestamp desc", :limit => 20 }
 
@@ -23,8 +24,19 @@ class EventsController < ApplicationController
             options[:log_level] = selected_log_level
         end
 
+        if ( selected_date_from.nil? == false )
+            begin            
+                date = DateTime.strptime( selected_date_from, "%m-%d-%Y" ).to_time + 24.hours
+                options[:timestamp] = { :$lte => date }
+            rescue
+                
+            end
+        end
+
         @events       = Event.all options
     end
+
+
 
 
 end

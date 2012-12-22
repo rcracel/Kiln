@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
-.form-inline { padding: 0 14px; margin-bottom: 14px; }
+.form-inline { margin-bottom: 14px; }
 
 #log-console { border: 1px solid #999; padding: 14px; border-radius: 8px; background-color: #19273C; }
 
@@ -19,3 +19,6 @@
 #log-console .event.info  { color: #44AAFE; }
 #log-console .event.warn  { color: #F1D347; }
 #log-console .event.error { color: #F7948A; }
+
+.dp_fix { width: 140px; }
+.dp_fix > input { width: 110px !important; }

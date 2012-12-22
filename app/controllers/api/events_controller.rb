@@ -18,4 +18,8 @@ class Api::EventsController < ApplicationController
         render :json => "Yes"
     end
 
+    def list
+
+    end
+
 end
