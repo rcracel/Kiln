@@ -64,9 +64,11 @@ Kiln::Application.routes.draw do
 
   match '/dashboard' => 'welcome#index', :as => :dashboard
 
-  match '/admin' => 'admin#index', :as => :admin
+  match '/users' => 'admin#users', :as => :user_list
 
   match '/events' => 'events#index', :as => :events
+
+  match '/docs' => 'documentation#index', :as => :documentation
 
   namespace :api do
 

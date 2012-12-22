@@ -23,7 +23,7 @@
 
     <% @events.each do |event| %>
 
-    <div class='event <%= (event.log_level || "").downcase() %>'> 
+    <div class='event <%= (event.log_level || "").downcase() %>' object-id="<%= event.id %>"> 
 
         <div class='event-date'>
             <%= apply_timezone( event.timestamp ).strftime("%Y-%M-%d %H:%M:%S %z") unless event.timestamp.nil? %>

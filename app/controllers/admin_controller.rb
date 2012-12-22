@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
 
-    def index
+    def users
         @users = User.all
     end
 
