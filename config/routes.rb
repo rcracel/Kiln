@@ -50,6 +50,15 @@ Kiln::Application.routes.draw do
   # just remember to delete public/index.html.
   root :to => 'welcome#index'
 
+  match '/signup' => 'users#new', :as => :signup, :via => :get
+  match '/signup' => 'users#create', :as => :create_user, :via => :post
+
+  match '/login' => 'sessions#new', :as => :login
+
+  match '/logout' => 'sessions#destroy', :as => :logout
+
+  match '/authenticate' => 'sessions#create', :as => :authenticate
+
   match '/account' => 'account#index',    :as => :user_account
 
   match '/dashboard' => 'welcome#index', :as => :dashboard

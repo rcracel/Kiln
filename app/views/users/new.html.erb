@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="span4 offset4 well">
+            <legend>Easy Sign Up</legend>
+
+            <% if @user.errors.any? %>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <% @user.errors.full_messages.each do |message| %>
+                <%= message %><br />
+                <% end %>
+            </div>
+            <% end %>
+
+            <%= form_for @user, :url => create_user_path do |f| %>
+                <div class="clearfix">
+                    <%= f.text_field :email, :placeholder => "Email Address" %>
+                </div>
+                <div class="clearfix">
+                    <%= f.password_field :password, :placeholder => "Password" %>
+                </div>
+                <div class="clearfix">
+                    <%= f.password_field :password_confirmation, :placeholder => "Password Confirmation" %>
+                </div>
+                <%= submit_tag "Sign Up", :class => "btn btn-primary" %>
+            <% end %>
+        </div>
+    </div>
+</div>
