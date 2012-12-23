@@ -25,12 +25,21 @@ class EventsController < ApplicationController
         end
 
         if ( selected_date_from.nil? == false )
-            begin            
-                date = DateTime.strptime( selected_date_from, "%m-%d-%Y" ).to_time + 24.hours
-                options[:timestamp] = { :$lte => date }
-            rescue
-                
+            begin
+                timezone = current_user.timezone.nil? ? 
+                                Time.zone : 
+                                ActiveSupport::TimeZone.new( current_user.timezone )
+
+                date = timezone.parse( selected_date_from, "%mm-%dd-%YYYY" )
+
+                logger.info "------ FROM : #{date}"
+                logger.info "------ TO   : #{date + 24.hours}"
+
+                options[:timestamp] = { :$gte => date, :$lte => (date + 24.hours) }
+            rescue Exception => e
+                logger.error "*********** Something wrong happened : #{e.message} for #{selected_date_from}"
             end
+
         end
 
         @events       = Event.all options

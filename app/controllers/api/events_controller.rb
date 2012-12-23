@@ -1,5 +1,7 @@
 class Api::EventsController < ApplicationController
 
+    skip_before_filter :authorize
+
     def publish
         events = params[:events]
 
