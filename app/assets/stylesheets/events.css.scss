@@ -11,10 +11,10 @@
 #log-console .event .event-date { display: inline-block; width: 200px; }
 #log-console .event .event-level { display: inline-block; width: 60px; font-weight: bold; }
 #log-console .event .event-app-name { display: inline-block; text-decoration: underline; }
+#log-console .event .event-module-name { display: inline-block; }
 #log-console .event .event-environment { display: inline-block; font-style: italic; }
 #log-console .event .event-source-ip { display: inline-block; }
 #log-console .event .event-message { display: block; padding: 2px 0;}
-
 
 #log-console .event.info  { color: #44AAFE; }
 #log-console .event.warn  { color: #F1D347; }

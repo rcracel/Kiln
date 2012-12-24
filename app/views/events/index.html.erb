@@ -2,11 +2,14 @@
 
     <div class="row-fluid">
 
-        <div class="form-inline span12 well">
+        <div id="event-filter" class="form-inline span12 well">
 
             <%= select_tag :application_name, 
-                            options_for_select( @applications, cookies['selected_application_name'] ), 
+                            options_for_select( @applications, cookies['selected_application_id'] ), 
                             {:prompt => 'All Applications', :class => "span2"} %>
+            <%= select_tag :module_name, 
+                            options_for_select( @modules, cookies['selected_module_name'] ), 
+                            {:prompt => 'All Modules', :class => "span2"} %>
             <%= select_tag :environment_name, 
                             options_for_select( @environments, cookies['selected_environment_name'] ),
                             {:prompt => 'All Environments', :class => "span2"} %>
@@ -14,15 +17,14 @@
                             options_for_select( @log_levels, cookies['selected_log_level'] ),
                             {:prompt => 'All Levels', :class => "span2" } %>
 
-            <div class="pull-right">
-                <div class="input-append date dp_fix" id="dp1" data-date="" data-date-format="mm-dd-yyyy">
-                    <input id="date_from" class="span2" size="36" type="text" value="<%= cookies['selected_date_from'] %>" placeholder="Start Date" >
-                    <span class="add-on"><i class="icon-th"></i></span>
-                </div>
-
-                <%= button_tag "Apply", :class => "btn btn-primary", :id => "btn_apply" %>
-                <%= button_tag "Reset", :class => "btn", :id => "btn_reset" %>
+            <div class="input-append date dp_fix" id="dp1" data-date="" data-date-format="mm-dd-yyyy">
+                <input id="date_from" class="span2" size="36" type="text" value="<%= cookies['selected_date_from'] %>" placeholder="Start Date" >
+                <span class="add-on"><i class="icon-th"></i></span>
             </div>
+
+            <%= button_tag "Apply", :class => "btn btn-primary", :id => "btn_apply" %>
+            <%= button_tag "Reset", :class => "btn", :id => "btn_reset" %>
+
         </div>
 
     </div>
@@ -41,7 +43,9 @@
 
                 <div class='event-level'><%= event.log_level %></div> 
 
-                <div class='event-app-name'><%= event.application_name %></div> 
+                <div class='event-app-name'><%= event.application.try(:name) %></div> 
+
+                <div class='event-module-name'>[<%= event.module_name %>]</div> 
 
                 <div class='event-environment'><%= event.environment_name %></div>
 

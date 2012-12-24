@@ -4,7 +4,11 @@ defaults: &defaults
 
 development:
   <<: *defaults
+  host: linus.mongohq.com
+  port: 10056
   database: kiln_development
+  username: rails_user
+  password: jfro9ae3)FAE0qx
 
 test:
   <<: *defaults
@@ -13,9 +17,11 @@ test:
 # set these environment variables on your prod server
 production:
   <<: *defaults
-  database: kiln
-  username: <%= ENV['MONGO_USERNAME'] %>
-  password: <%= ENV['MONGO_PASSWORD'] %>
+  host: linus.mongohq.com
+  port: 10056
+  database: kiln_production
+  username: rails_user
+  password: jfro9ae3)FAE0qx
 
 # MongoMapper.connection = Mongo::Connection.new('localhost', 27017)
 # MongoMapper.database = "#espacio-#{Rails.env}"

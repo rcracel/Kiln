@@ -68,6 +68,9 @@ Kiln::Application.routes.draw do
 
   match '/events' => 'events#index', :as => :events
 
+  match '/apps' => 'applications#index', :as => :applications, :via => :get
+  match '/apps' => 'applications#create', :as => :create_application, :via => :post
+
   match '/docs' => 'documentation#index', :as => :documentation
 
   namespace :api do

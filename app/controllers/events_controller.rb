@@ -1,19 +1,26 @@
 class EventsController < ApplicationController
 
     def index
-        @applications = Event.collection.distinct( :application_name )
+        @applications = Application.all.collect { |a| [ a.name, a.id.to_s ] }
+        @modules      = Event.collection.distinct( :module_name )
         @environments = Event.collection.distinct( :environment_name )
         @log_levels   = Event.collection.distinct( :log_level )
 
-        selected_application = cookies[ :selected_application_name ]
+        selected_application = cookies[ :selected_application_id ]
+        selected_module      = cookies[ :selected_module_name ]
         selected_environment = cookies[ :selected_environment_name ]
         selected_log_level   = cookies[ :selected_log_level ]
         selected_date_from   = cookies[ :selected_date_from ]
 
         options = { :order => "timestamp desc", :limit => 20 }
 
-        if ( @applications.include? selected_application )
-            options[:application_name] = selected_application
+        if ( @applications.find { |a| a[1] == selected_application } )
+            
+            options[:application_id] = selected_application
+        end
+
+        if ( @modules.include? selected_module )
+            options[:module_name] = selected_module
         end
 
         if ( @environments.include? selected_environment )
