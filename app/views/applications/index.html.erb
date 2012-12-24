@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <table class="table table-condensed table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Application Name</th>
+                        <th>API Key</th>
+                        <th>Date Created</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @applications.each do |application| %>
+                        <tr>
+                            <td><%= application.name %></td>
+                            <td><%= application.api_key %></td>
+                            <td><%= apply_timezone( application.created_at ).strftime("%Y-%m-%d %H:%M:%S %z") %></td>
+                            <td><%= application.description %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="span12 well">
+
+            <legend>Create New Application</legend>
+
+            <% if @application.errors.any? %>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <% @application.errors.full_messages.each do |message| %>
+                <%= message %><br />
+                <% end %>
+            </div>
+            <% end %>
+
+            <%= form_for @application, :url => create_application_path, :html => { :class => "form-horizontal" } do |f| %>
+
+                <div class="control-group">
+                    <%= f.label :name, "Application Name", :class => "control-label" %>
+                    <div class="controls">
+                        <%= f.text_field :name, :placeholder => "Application Name" %>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <%= f.label :description, "Description", :class => "control-label" %>
+                    <div class="controls">
+                        <%= f.text_area :description, :rows => 4, :class => "span6", :placeholder => "Enter a brief descriptions for the application" %>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <%= submit_tag "Create", :class => "btn btn-primary", :id => "submit_button" %>
+                    </div>
+                </div>
+
+            <% end %>
+
+        </div>
+    </div>
+</div>
