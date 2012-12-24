@@ -5,4 +5,4 @@ test:
     allow_new_users: true
 
 production:
-    allow_new_users: false
+    allow_new_users: true
