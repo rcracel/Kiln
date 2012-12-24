@@ -7,8 +7,8 @@ development:
   host: linus.mongohq.com
   port: 10056
   database: kiln_development
-  username: rails_user
-  password: jfro9ae3)FAE0qx
+  username: <%= ENV['kiln_db_username'] %>
+  password: <%= ENV['kiln_db_password'] %>
 
 test:
   <<: *defaults
@@ -20,5 +20,5 @@ production:
   host: linus.mongohq.com
   port: 10057
   database: kiln_production
-  username: rails_user
-  password: jfro9ae3)FAE0qx
+  username: <%= ENV['kiln_db_username'] %>
+  password: <%= ENV['kiln_db_password'] %>
