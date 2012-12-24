@@ -18,7 +18,7 @@ test:
 production:
   <<: *defaults
   host: linus.mongohq.com
-  port: 10056
+  port: 10057
   database: kiln_production
   username: rails_user
   password: jfro9ae3)FAE0qx
