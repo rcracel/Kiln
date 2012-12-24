@@ -1,3 +1,10 @@
+<%= stylesheet_link_tag "http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css" %>
+<%= javascript_include_tag "http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js" %>
+
+<script type="text/javascript">
+    window.onload = function() { prettyPrint(); }
+</script>
+
 <div class="container">
     <div class="row">
 
@@ -8,7 +15,6 @@
                     <li><a href="#config"><i class="icon-chevron-right"></i> Configuration</a></li>
                     <li><a href="#log4j-appender"><i class="icon-chevron-right"></i> Log4J Appender</a></li>
                     <li><a href="#api"><i class="icon-chevron-right"></i> API</a></li>
-                    <li><a href="#events"><i class="icon-chevron-right"></i> Event Browser</a></li>
                 </ul>
             </div>
         </div>
@@ -93,20 +99,119 @@
             <section id="log4j-appender">
                 <div class="page-header"><h1>Log4J Appender</h1></div>
 
+                <p>
+                    If you are using Maven with Java or another JVM based languange, you can add a dependency to the Kiln adapter to your application, and usually through a simple configuration line push log events to your Kiln instance.
+                </p>
 
+                <h3>Maven</h3>
+
+                <h4>pom.xml</h4>
+                <pre class="prettyprint linenums languague-xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;com.nevermindsoft&lt;/groupId&gt;
+    &lt;artifactId&gt;kiln-adaptor-java&lt;/artifactId&gt;
+    &lt;version&gt;1.4&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+
+                <h3>Grails</h3>
+
+                <h4>BuildConfig.groovy<h4>
+                <pre class="prettyprint linenums languague-java">
+dependencies {
+    runtime 'com.nevermindsoft:kiln-adaptor-java:1.4'
+    ....
+}</pre>
+                <h4>Config.groovy</h4>
+                <pre class="prettyprint linenums languague-java">
+log4j = {
+    appenders {
+        ....
+        appender    new com.nevermindsoft.kiln.RemoteServiceAppender(
+                name:            "remote",
+                moduleName:      "My Module Name",
+                apiKey:          "get-key-from-kiln",
+                environmentName: grails.util.Environment.current.getName(),
+                serverUrl:       "http://my.url/api/events/publish",
+                maxRequestItems: 200,
+                sleepTime:       5000
+        )
+    }
+
+    ...
+
+    root {
+        info  'remote'
+        ...
+    }
+}
+
+</pre>
             </section>
 
             <section id="api">
                 <div class="page-header"><h1>Restful API</h1></div>
 
+                <p>
+                    Kiln's provides a restful JSON based api that can be used to gain access to repository functionality. You can use the API methods specified below to write new appender for additional programming languages, generate external reports, or even add monitors to notify stakeholders of potential risks from application errors or intrusion attempts.
+                </p>
+
+
+                <h3>/api/events/publish</h3>
+
+                <p>
+                    This method allows you to publish event logs to the repository. You will need to <a href="<%= applications_url %>"> create an application</a> and use the provided API Key to connect to Kiln.
+                </p>
+
+                <dl>
+                    <dt>module_name</dt>
+                    <dd>The name of the application module publishing this log event. This is usually a qualified stand alone part of your application or application suite. <em>(optional)</em></dd>
+
+                    <dt>log_level</dt>
+                    <dd>The log level for this event. Examples are INFO, WARN, ERROR. <em>(optional)</em></dd>
+
+                    <dt>message</dt>
+                    <dd>The textual message for the log event.</dd>
+
+                    <dt>timestamp</dt>
+                    <dd>The timestamp for the log event. The format is %m/%d/%Y %H:%M:%S %z. <em>(optional)</em></dd>
+
+                    <dt>thread_name</dt>
+                    <dd>The name of the application thread where the log event originated. This is helpful for detecting which worker thread on a multi-threaded application has generated the log. <em>(optional)</em></dd>
+
+                    <dt>stack_trace</dt>
+                    <dd>A string representation of the stack trace associated with the log event. This is useful for capturing exception stack traces for errors. <em>(optional)</em></dd>
+
+                    <dt>environment_name</dt>
+                    <dd>The name of the environment where the log event originated. This is useful to differentiate between development, staging, production or any other environments you may be maintaining concurrently on your project. <em>(optional)</em></dd>
+                </dl>
+
+                <h4>Example request payload</h4>
+                <pre class="prettyprint linenums languague-javascript">
+{
+    api_key: "xxx-xxx-xxx",
+    events: [
+        {
+            "module_name" : "Bulk Email Processor",
+            "log_level" : "INFO",
+            "message" : "Application Successfully Initialized",
+            "timestamp" : "12/21/2012 04:33:12 -5:00",
+            "thread_name" : "MainThread",
+            "environment_name" : "staging"
+        },
+        {
+            "module_name" : "Bulk Email Processor",
+            "log_level" : "WARN",
+            "message" : "Found unprocessed outbound messages, please ensure proper shutdown to prevent message loss.",
+            "timestamp" : "12/21/2012 04:51:12 -5:00",
+            "thread_name" : "WorkerThread-01",
+            "environment_name" : "staging"
+        }
+    ]
+}
+                </pre>
 
             </section>
 
-            <section id="events">
-                <div class="page-header"><h1>Event Browser</h1></div>
-
-
-            </section>
         </div>
 
     </div>

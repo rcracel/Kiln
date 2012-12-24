@@ -75,7 +75,7 @@ Kiln::Application.routes.draw do
 
   namespace :api do
 
-    match '/events/publish' => 'events#publish', :as => :api_event_publisher
+    match '/events/publish' => 'events#publish', :as => :event_publisher
 
   end
 
