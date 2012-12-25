@@ -39,6 +39,8 @@ The password used to connect to your MongoDB instance. We recommend you leave th
 
 If you are using Maven with Java or another JVM based languange, you can add a dependency to the Kiln adapter to your application, and usually through a simple configuration line push log events to your Kiln instance.
 
+The project information and source code for the Log4J adaptor is currently available the (Project Page)[https://github.com/rcracel/kiln-java-adaptor] on GitHub. Feel free to check it out, contribute or report bugs.
+
 ## Maven
 
 ### pom.xml
