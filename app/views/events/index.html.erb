@@ -4,6 +4,9 @@
 
         <div id="event-filter" class="form-inline span12 well">
 
+            <%= select_tag :visualization_format,
+                            options_for_select( @formats, cookies['selected_format'] ),
+                            { :class => "span2" } %>
             <%= select_tag :application_name, 
                             options_for_select( @applications, cookies['selected_application_id'] ), 
                             {:prompt => 'All Applications', :class => "span2"} %>

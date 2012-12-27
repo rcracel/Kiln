@@ -12,6 +12,7 @@ class Event
     key :stack_trace,       String
     key :environment_name,  String
     key :ip_address,        String
+    key :source,            String
 
     belongs_to :application
 

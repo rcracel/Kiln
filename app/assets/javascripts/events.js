@@ -1,6 +1,12 @@
 $(function() {
 
     //set_cookie
+    $("#event-filter #visualization_format").change( function() {
+        var visualization_format = $(this).val();
+        set_cookie( "selected_format", visualization_format, null );
+        window.location.reload();        
+    });
+
     $("#event-filter #application_name").change( function() {
         var application_name = $(this).val();
         set_cookie( "selected_application_id", application_name, null );

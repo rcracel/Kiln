@@ -5,6 +5,7 @@ class EventsController < ApplicationController
         @modules      = Event.collection.distinct( :module_name )
         @environments = Event.collection.distinct( :environment_name )
         @log_levels   = Event.collection.distinct( :log_level )
+        @formats      = [ "Kiln Expanded", "Single Line Wide", "Basic" ]
 
         selected_application = cookies[ :selected_application_id ]
         selected_module      = cookies[ :selected_module_name ]
@@ -38,9 +39,6 @@ class EventsController < ApplicationController
                                 ActiveSupport::TimeZone.new( current_user.timezone )
 
                 date = timezone.parse( selected_date_from, "%mm-%dd-%YYYY" )
-
-                logger.info "------ FROM : #{date}"
-                logger.info "------ TO   : #{date + 24.hours}"
 
                 options[:timestamp] = { :$gte => date, :$lte => (date + 24.hours) }
             rescue Exception => e

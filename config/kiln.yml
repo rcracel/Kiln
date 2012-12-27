@@ -1,8 +1,11 @@
-development:
+defaults: &defaults
     allow_new_users: true
+
+development:
+    <<: *defaults
 
 test:
-    allow_new_users: true
+    <<: *defaults
 
 production:
-    allow_new_users: true
+    <<: *defaults

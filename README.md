@@ -15,9 +15,36 @@ The source code for Kiln may be checked out from [GitHub](https://github.com/rcr
 
 # Server Configuration
 
-Kiln comes pre-configured with basic settings and ready to deploy. While intent is to have administrators configure Kiln from the application itself, we currently only support configuration changes through modifications to a few text files. In order to customize Kiln, you may modify the following configuration files, relative to the application root:
+Kiln comes pre-configured to connect to a MongoDB instance running on localhost with no authentication. Although this may be considered sufficient for testing purposes, when deploying to a production server you will probably want to configure to use a more robust database solution such as the many cloud solutions currently being offered as a service. To override the default configuration settings you must place a file named "kiln_mongo.yml" on the home directory of the user running your application server.
 
-## config/kiln.yml
+## ~/kiln_mongo.yml sample
+
+```yaml
+production:
+  host: hosted.mongodb.com
+  port: 10057
+  database: kiln_production
+  username: mongo_user
+  password: s3cr3t
+```
+
+In addition to overriding the database configuration, there are a few other settings that can be overriden by adding a "kiln.yml" file to the home directory of the user running your application server.
+
+## ~/kiln.yml sample
+
+```yaml
+defaults: &defaults
+    allow_new_users: true
+
+development:
+    <<: *defaults
+
+test:
+    <<: *defaults
+
+production:
+    <<: *defaults
+```
 
 ####\[environemnt\]:allow_new_users
 Determines where the application allows new users to register. If set to false only existing users will have access to the application. You can use this option to prevent unauthorized users to see your log files.
@@ -49,7 +76,7 @@ The project information and source code for the Log4J adaptor is currently avail
 <dependency>
     <groupId>com.nevermindsoft</groupId>
     <artifactId>kiln-adaptor-java</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
 </dependency>
 ```
 
@@ -59,7 +86,7 @@ The project information and source code for the Log4J adaptor is currently avail
 
 ```java
 dependencies {
-    runtime 'com.nevermindsoft:kiln-adaptor-java:1.4'
+    runtime 'com.nevermindsoft:kiln-adaptor-java:1.5'
     ....
 }
 ```
@@ -98,6 +125,8 @@ This method allows you to publish event logs to the repository. You will need to
 
 ### module_name
 The name of the application module publishing this log event. This is usually a qualified stand alone part of your application or application suite. (optional)
+### source
+The location, in code, where the message originated from. This would tipically include the class name, method name, and, if available, a line number. (optional)
 ### log_level
 The log level for this event. Examples are INFO, WARN, ERROR. (optional)
 ### message
@@ -119,6 +148,7 @@ The name of the environment where the log event originated. This is useful to di
     events: [
         {
             "module_name" : "Bulk Email Processor",
+            "source" : "com.nevermindsoft.ApplicationInitializer.startUp() (133)",
             "log_level" : "INFO",
             "message" : "Application Successfully Initialized",
             "timestamp" : "12/21/2012 04:33:12 -5:00",
@@ -127,6 +157,7 @@ The name of the environment where the log event originated. This is useful to di
         },
         {
             "module_name" : "Bulk Email Processor",
+            "source" : "com.nevermindsoft.EmailProcessor.checkState() (76)",
             "log_level" : "WARN",
             "message" : "Found unprocessed outbound messages, please ensure proper shutdown to prevent message loss.",
             "timestamp" : "12/21/2012 04:51:12 -5:00",
