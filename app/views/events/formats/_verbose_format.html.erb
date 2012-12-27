@@ -1,0 +1,17 @@
+<div class='event-date'>
+    <%= apply_timezone( event.timestamp ).strftime("%Y-%m-%d %H:%M:%S %z") unless event.timestamp.nil? %>
+</div> 
+
+<div class='event-level'>Log Level: <%= event.log_level %></div> 
+
+<div class='event-app-name'>Application Name: <%= event.application.try(:name) %></div> 
+
+<div class='event-module-name'>Module Name: <%= event.module_name %></div> 
+
+<div class='event-environment'>Environment: <%= event.environment_name %></div>
+
+<div class='event-source-ip'>Application IP Address: <%= event.ip_address %></div>
+
+<div class='event-source'>Event Source: <%= event.source %></div>
+
+<div class='event-message'><%= event.message %></div>

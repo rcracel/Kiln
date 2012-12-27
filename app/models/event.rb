@@ -18,4 +18,32 @@ class Event
 
     timestamps!
 
+
+    def self.module_name_list( application_id )
+        options = { }
+
+        options[ :application_id ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?
+
+        Event.collection.distinct( :module_name, options )
+    end
+
+    def self.environment_name_list( application_id, module_name )
+        options = { }
+
+        options[ :application_id ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?
+        options[ :module_name    ] = module_name    unless module_name.nil?
+
+        Event.collection.distinct( :environment_name, options )
+    end
+
+    def self.log_level_list( application_id, module_name, environment_name )
+        options = { }
+
+        options[ :application_id ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?
+        options[ :module_name      ] = module_name      unless module_name.nil?
+        options[ :environment_name ] = environment_name unless environment_name.nil?
+
+        Event.collection.distinct( :log_level, options )
+    end
+
 end

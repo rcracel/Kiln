@@ -8,14 +8,39 @@
 #log-console { border: 1px solid #999; padding: 14px; border-radius: 8px; background-color: #19273C; }
 
 #log-console .event { font-family: "Courier New", Courier, monospace; font-size: 14px; margin-bottom: 6px; color: #999; }
-#log-console .event .event-date { display: inline-block; width: 200px; }
-#log-console .event .event-level { display: inline-block; width: 60px; font-weight: bold; }
-#log-console .event .event-app-name { display: inline-block; text-decoration: underline; }
-#log-console .event .event-module-name { display: inline-block; }
-#log-console .event .event-environment { display: inline-block; font-style: italic; }
-#log-console .event .event-source-ip { display: inline-block; }
-#log-console .event .event-source { display: inline-block; }
-#log-console .event .event-message { display: block; padding: 2px 0;}
+
+#log-console .event.default_format {
+    .event-date { display: inline-block; width: 200px; }
+    .event-level { display: inline-block; width: 60px; font-weight: bold; }
+    .event-app-name { display: inline-block; text-decoration: underline; }
+    .event-module-name { display: inline-block; }
+    .event-environment { display: inline-block; font-style: italic; }
+    .event-source-ip { display: inline-block; }
+    .event-source { display: inline-block; }
+    .event-message { display: block; padding: 2px 0;}
+}
+
+#log-console .event.single_line_format {
+    .event-date { display: inline-block; width: 200px; }
+    .event-level { display: inline-block; width: 60px; font-weight: bold; }
+    .event-qualifier { display: inline-block; }
+    .event-message { display: inline-block; padding: 2px 0;}
+}
+
+#log-console .event.verbose_format {
+
+    border-bottom: 1px solid #444;
+
+    .event-date { }
+    .event-level { }
+    .event-app-name { }
+    .event-module-name { }
+    .event-environment { font-style: italic; }
+    .event-source-ip { }
+    .event-source { }
+    .event-message { padding: 2px 0; font-style: italic; margin-left: 14px; }
+}
+
 
 #log-console .event.info  { color: #44AAFE; }
 #log-console .event.warn  { color: #F1D347; }
