@@ -10,6 +10,12 @@ end
 # optional external configuration file path:
 config = {}
 
+db_config_defaults_file = Rails.root.join('config/kiln_mongo.yml')
+if db_config_defaults_file.file?
+    puts "Merging DB configuration file #{db_config_defaults_file}"
+    config.merge! YAML.load( db_config_defaults_file.read )
+end
+
 db_config_override_file = Rails.root.join('config/overrides/mongo.yml')
 if db_config_override_file.file?
     puts "Merging DB configuration file #{db_config_override_file}"
@@ -22,4 +28,4 @@ if db_config_local_file.file?
     config.merge! YAML.load( db_config_local_file.read )
 end
 
-MongoMapper.setup( config, Rails.env, :logger => Rails.logger )
+MongoMapper.setup( config, Rails.env, :logger => Rails.logger ) unless config.empty?

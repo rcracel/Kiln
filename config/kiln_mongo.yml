@@ -1,0 +1,15 @@
+defaults: &defaults
+    host: localhost
+    port: 27017
+
+test:
+    <<: *defaults
+    database: kiln_test
+
+development:
+    <<: *defaults
+    database: kiln_development
+
+production:
+    <<: *defaults
+    database: kiln_production
