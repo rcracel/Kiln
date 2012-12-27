@@ -28,4 +28,8 @@ if db_config_local_file.file?
     config.merge! YAML.load( db_config_local_file.read )
 end
 
-MongoMapper.setup( config, Rails.env, :logger => Rails.logger ) unless config.empty?
+begin
+    MongoMapper.setup( config, Rails.env, :logger => Rails.logger ) unless config.empty?    
+rescue
+    puts "Could not initalize mongo connection"
+end
