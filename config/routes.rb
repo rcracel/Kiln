@@ -79,7 +79,8 @@ Kiln::Application.routes.draw do
 
 
 
-    match '/internal/events' => 'internal#events', :as => :internal_events_loader
+    match '/internal/events/tail' => 'internal#events_tail', :as => :internal_events_tail
+    match '/internal/events/head' => 'internal#events_head', :as => :internal_events_head
 
   end
 

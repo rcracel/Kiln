@@ -48,25 +48,33 @@ $(function() {
         window.location.reload();
     });
 
-    var has_scrolled = false,
-        is_resizing  = false,
-        marker       = $("#get-more-items"),
-        marker_top   = marker.offset().top,
-        log_console  = $("#log-console"),
-        target_url   = log_console.attr("data-url");
+    var has_scrolled    = false,
+        is_resizing     = false,
+        marker          = $("#get-more-items"),
+        marker_top      = marker.offset().top,
+        log_console     = $("#log-console"),
+        tail_target_url = log_console.attr("data-tail-url"),
+        head_target_url = log_console.attr("data-head-url"),
+        tail_timer      = null,
+        head_timer      = null;
 
     $( window ).scroll( function() { has_scrolled = true; });
 
-    function load_more_events() {
+    function load_tail_events() {
         var last_event = log_console.find(".event").filter(":last");
 
         is_resizing = true;
 
         $.ajax({
-            url: target_url,
+            url: tail_target_url,
             data: { last_id: last_event.attr("object-id") },
             success: function( data, textStatus, jqXHR ) {
-                marker.before( data );
+                if ( data == null || data.trim().length == 0 ) {
+                    marker.remove();
+                    clearInterval( tail_timer );
+                } else {
+                    marker.before( data );
+                }
             },
             error: function( jqXHR, textStatus, errorThrown ) {
                 console.info( errorThrown );
@@ -79,16 +87,37 @@ $(function() {
         });
     }
 
-    setInterval( function() {
+    tail_timer = setInterval( function() {
         if ( has_scrolled && !is_resizing ) {
             if ( ($(window).scrollTop() + $(window).height()) >= marker_top ) {
-                load_more_events();                
+                load_tail_events();                
             }
 
             has_scrolled = false;
         }
     }, 500);
 
-    load_more_events();
+    function poll_new_events( delay ) {
+        var first_event = log_console.find(".event").filter(":first"), wait_time = delay;
+        $.ajax({
+            url: head_target_url,
+            data: { first_id: first_event.attr("object-id") },
+            success: function( data, textStatus, jqXHR ) {
+                if ( data == null || data.trim().length == 0 ) {
+                    //- Nothing to report
+                } else {
+                    log_console.prepend( data );
+                }
+            },
+            complete: function( jqXHR, textStatus ) {
+                setTimeout( function() { poll_new_events( wait_time ); }, wait_time );
+            }
+        });
+    }
+
+    load_tail_events();
+
+    //- Although this is a good idea, I am currently concerned with performance on the server side
+    poll_new_events( 5000 );
 
 });
