@@ -1,13 +1,17 @@
-<div class='event-date'>
-    <%= apply_timezone( event.timestamp ).strftime("%Y-%m-%d %H:%M:%S") unless event.timestamp.nil? %>
-</div> 
+<div class='event <%= (event.log_level || "").downcase() %> <%= @selected_format %>' object-id="<%= event.id %>"> 
 
-<div class='event-level'><%= event.log_level %></div> 
+    <div class='event-date'>
+        <%= apply_timezone( event.timestamp ).strftime("%Y-%m-%d %H:%M:%S") unless event.timestamp.nil? %>
+    </div> 
 
-<div class='event-qualifier'>
-    <%= event.application.try(:name) %>
-    <%= event.module_name %>[<%= event.environment_name %>]
-    <%= event.ip_address %>
+    <div class='event-level'><%= event.log_level %></div> 
+
+    <div class='event-qualifier'>
+        <%= event.application.try(:name) %>
+        <%= event.module_name %>[<%= event.environment_name %>]
+        <%= event.ip_address %>
+    </div>
+
+    <div class='event-message'><%= event.message %></div>
+    
 </div>
-
-<div class='event-message'><%= event.message %></div>

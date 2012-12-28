@@ -34,17 +34,7 @@
 
     <div class="row-fluid">
 
-        <div id="log-console" class="span12">
-
-            <% @events.each do |event| %>
-
-            <div class='event <%= (event.log_level || "").downcase() %> <%= @selected_format %>' object-id="<%= event.id %>"> 
-
-                <%= render "events/formats/#{@selected_format}", { :event => event } %>
-
-            </div>
-
-            <% end %>
+        <div id="log-console" class="span12" data-url="<%= api_internal_events_loader_url %>">
 
             <div id="get-more-items">&nbsp;</div>
 

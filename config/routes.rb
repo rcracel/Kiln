@@ -77,6 +77,10 @@ Kiln::Application.routes.draw do
 
     match '/events/publish' => 'events#publish', :as => :event_publisher
 
+
+
+    match '/internal/events' => 'internal#events', :as => :internal_events_loader
+
   end
 
   # See how all your routes lay out with "rake routes"

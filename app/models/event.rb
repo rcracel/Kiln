@@ -46,4 +46,8 @@ class Event
         Event.collection.distinct( :log_level, options )
     end
 
+    def self.find_for_user( user, options = {} )
+        self.all( options )
+    end
+
 end

@@ -48,4 +48,47 @@ $(function() {
         window.location.reload();
     });
 
+    var has_scrolled = false,
+        is_resizing  = false,
+        marker       = $("#get-more-items"),
+        marker_top   = marker.offset().top,
+        log_console  = $("#log-console"),
+        target_url   = log_console.attr("data-url");
+
+    $( window ).scroll( function() { has_scrolled = true; });
+
+    function load_more_events() {
+        var last_event = log_console.find(".event").filter(":last");
+
+        is_resizing = true;
+
+        $.ajax({
+            url: target_url,
+            data: { last_id: last_event.attr("object-id") },
+            success: function( data, textStatus, jqXHR ) {
+                marker.before( data );
+            },
+            error: function( jqXHR, textStatus, errorThrown ) {
+                console.info( errorThrown );
+            },
+            complete: function( jqXHR, textStatus ) {
+                marker_top   = marker.offset().top;
+                is_resizing  = false;
+                has_scrolled = false;
+            }
+        });
+    }
+
+    setInterval( function() {
+        if ( has_scrolled && !is_resizing ) {
+            if ( ($(window).scrollTop() + $(window).height()) >= marker_top ) {
+                load_more_events();                
+            }
+
+            has_scrolled = false;
+        }
+    }, 500);
+
+    load_more_events();
+
 });
