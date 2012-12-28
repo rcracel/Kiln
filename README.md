@@ -46,8 +46,21 @@ production:
     <<: *defaults
 ```
 
-####\[environemnt\]:allow_new_users
+####\[environment\]:allow_new_users
 Determines where the application allows new users to register. If set to false only existing users will have access to the application. You can use this option to prevent unauthorized users to see your log files.
+
+## config/mongo.yml
+
+####\[environment\]:host
+The hostname or IP address of your MongoDB instance.
+####\[environment\]:port
+The port used to connect to your MongoDB instance.
+####\[environment\]:database
+The name of the database you want to use for storing the log events.
+####\[environment\]:username
+The username used to connect to your MongoDB instance. We recommend you leave this as an environment variable for easier configuration.
+####\[environment\]:password
+The password used to connect to your MongoDB instance. We recommend you leave this as an environment variable for easier configuration.
 
 # Log4J Appender
 
