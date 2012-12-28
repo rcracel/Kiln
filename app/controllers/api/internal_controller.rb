@@ -7,10 +7,13 @@ class Api::InternalController < ApplicationController
     def events_tail
         @selected_format = cookies[ :selected_format ]
 
+        last_event = Event.find( params[ :last_id ] )
+
         query_options = build_query_options( { :order => [ "timestamp desc", "_id desc" ], :limit => 30 } )
 
         if ( params[ :last_id ] )
-            query_options[ :_id ] = { :$lte => BSON::ObjectId.from_string( params[ :last_id ] ) }
+            query_options[ :timestamp ] = { :$lte => last_event.timestamp }
+            query_options[ :_id ] = { :$lt => last_event.id }
         end
 
         events = Event.find_for_user( current_user, query_options )
@@ -32,7 +35,7 @@ class Api::InternalController < ApplicationController
             query_options    = build_query_options( { :order => [ "timestamp asc", "_id asc" ], :limit => 200 } )
 
             query_options[ :timestamp ] = { :$gte => first_event.timestamp }
-            query_options[ :_id ] = { :$gt => BSON::ObjectId.from_string( params[ :first_id ] ) }
+            query_options[ :_id ] = { :$gt => first_event.id }
 
             events = Event.find_for_user( current_user, query_options ).reverse
 
