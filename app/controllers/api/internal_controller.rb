@@ -59,16 +59,19 @@ private
             # do some sanitizing first
             selected_date_from = selected_date_from.strip.gsub(/\\/, "-").gsub(/\s+/, " ")
 
-            # determine validity
-            if ( selected_date_from.match /^\d{1,2}\-\d{1,2}\-\d{4} \d{1,2}:\d{1,2}$/ )
-                timezone = current_user.timezone.nil? ? 
-                                Time.zone : 
-                                ActiveSupport::TimeZone.new( current_user.timezone )
+            matches = /^(\d{1,2})\-(\d{1,2})\-(\d{4})(?:\s+(\d{1,2}):(\d{1,2}))?$/.match selected_date_from
+            if matches
+                date = nil
 
-                date = timezone.parse( selected_date_from, "%mm-%dd-%YYYY %hh:%MM" )
-                options[:timestamp] = { :$gte => date, :$lte => (date + 24.hours) } unless date.nil?
+                if matches[4].nil? # time not specified
+                    date = Time.zone.local( matches[3].to_i, matches[1].to_i, matches[2].to_i ) + 24.hours - 1.seconds
+                else
+                    date = Time.zone.local( matches[3].to_i, matches[1].to_i, matches[2].to_i, matches[4].to_i, matches[5].to_i )
+                end
+
+                query_options[:timestamp] = { :$lte => date }
             else
-                logger.error "Invalid date format #{cookies[ :selected_date_from ]}"
+                logger.warn "Invalid date format #{selected_date_from}"
             end
         end        
 

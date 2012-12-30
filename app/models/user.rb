@@ -15,6 +15,8 @@ class User
 
     validates :email,     :presence => true, :length => { :minimum => 6 }, :uniqueness => true
 
+    validates_inclusion_of :timezone, in: ActiveSupport::TimeZone.zones_map(&:name)
+
     has_secure_password
 
 end

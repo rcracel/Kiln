@@ -20,11 +20,11 @@
                             options_for_select( @log_levels, cookies['selected_log_level'] ),
                             {:prompt => 'All Levels', :class => "span2" } %>
 
+
             <div class="input-append date dp_fix" id="dp1" data-date="" data-date-format="mm-dd-yyyy">
                 <input id="date_from" class="span2" size="36" type="text" value="<%= cookies['selected_date_from'] %>" placeholder="Start Date" >
                 <span class="add-on"><i class="icon-th"></i></span>
             </div>
-
             <%= button_tag "Apply", :class => "btn btn-primary", :id => "btn_apply" %>
             <%= button_tag "Reset", :class => "btn", :id => "btn_reset" %>
 

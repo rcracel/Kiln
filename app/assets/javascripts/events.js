@@ -89,13 +89,15 @@ $(function() {
 
     tail_timer = setInterval( function() {
         if ( has_scrolled && !is_resizing ) {
-            if ( ($(window).scrollTop() + $(window).height()) >= marker_top ) {
+            var w = $(window);
+
+            if ( ( w.scrollTop() + ( w.height() * 2 ) ) >= marker_top ) {
                 load_tail_events();                
             }
 
             has_scrolled = false;
         }
-    }, 500);
+    }, 250);
 
     function poll_new_events( delay ) {
         var first_event = log_console.find(".event").filter(":first"), wait_time = delay;
