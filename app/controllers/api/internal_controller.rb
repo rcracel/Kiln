@@ -11,8 +11,14 @@ class Api::InternalController < ApplicationController
 
         query_options = build_query_options( { :order => [ "timestamp desc", "_id desc" ], :limit => 30 } )
 
-        if ( params[ :last_id ] )
-            query_options[ :timestamp ] = { :$lte => last_event.timestamp }
+        if ( last_event )
+
+            # We need to be careful here since the timestamp condition may have already been specified
+            query_options[ :timestamp ] = {} if query_options[ :timestamp ].nil?
+            if ( query_options[ :timestamp ][ :$lte ].nil? or query_options[ :timestamp ][ :$lte ] < last_event.timestamp )
+                query_options[ :timestamp ][ :$lte ] = last_event.timestamp
+            end
+            
             query_options[ :_id ] = { :$lt => last_event.id }
         end
 
@@ -34,7 +40,12 @@ class Api::InternalController < ApplicationController
         if ( first_event )
             query_options    = build_query_options( { :order => [ "timestamp asc", "_id asc" ], :limit => 200 } )
 
-            query_options[ :timestamp ] = { :$gte => first_event.timestamp }
+            # We need to be careful here since the timestamp condition may have already been specified
+            query_options[ :timestamp ] = {} if query_options[ :timestamp ].nil?
+            if ( query_options[ :timestamp ][ :$gte ].nil? or query_options[ :timestamp ][ :$gte ] > first_event.timestamp )
+                query_options[ :timestamp ][ :$gte ] = first_event.timestamp
+            end
+
             query_options[ :_id ] = { :$gt => first_event.id }
 
             events = Event.find_for_user( current_user, query_options ).reverse
@@ -69,7 +80,7 @@ private
                     date = Time.zone.local( matches[3].to_i, matches[1].to_i, matches[2].to_i, matches[4].to_i, matches[5].to_i )
                 end
 
-                query_options[:timestamp] = { :$lte => date }
+                query_options[ :timestamp ] = { :$lte => date }
             else
                 logger.warn "Invalid date format #{selected_date_from}"
             end

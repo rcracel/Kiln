@@ -1,7 +1,7 @@
 require "uuidtools"
 
 class Application
-  include MongoMapper::Document
+    include MongoMapper::Document
 
     attr_accessible :name, :description
 
