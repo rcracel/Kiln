@@ -4,11 +4,18 @@
         <%= apply_timezone( event.timestamp ).strftime("%Y-%m-%d %H:%M:%S %z") unless event.timestamp.nil? %>
     </div> 
 
-    <div class='event-level'><%= event.log_level %></div> 
+    <div class='event-level'>
+        <% if not event.stack_trace.blank? %>
+            <span data-trigger="stacktrace" data-url="<%= api_internal_event_stacktrace_path( event.id ) %>">
+                <%= image_tag "bug.png" %>
+            </span>
+        <% end %>
+        <%= event.log_level %>
+    </div>
 
-    <div class='event-app-name'><%= event.application.try(:name) %></div> 
+    <div class='event-app-name'><%= event.application.try(:name) %></div>
 
-    <div class='event-module-name'>[<%= event.module_name %>]</div> 
+    <div class='event-module-name'>[<%= event.module_name %>]</div>
 
     <div class='event-environment'><%= event.environment_name %></div>
 
@@ -17,5 +24,7 @@
     <div class='event-source'><%= event.source %></div>
 
     <div class='event-message'><%= event.message %></div>
+
+    <%= event.stack_trace %>
 
 </div>

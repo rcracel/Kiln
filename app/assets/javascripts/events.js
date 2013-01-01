@@ -48,17 +48,37 @@ $(function() {
         window.location.reload();
     });
 
-    var has_scrolled    = false,
-        is_resizing     = false,
-        marker          = $("#get-more-items"),
-        marker_top      = marker.offset().top,
-        log_console     = $("#log-console"),
-        tail_target_url = log_console.attr("data-tail-url"),
-        head_target_url = log_console.attr("data-head-url"),
-        tail_timer      = null,
-        head_timer      = null;
+    var has_scrolled      = false,
+        is_resizing       = false,
+        marker            = $("#get-more-items"),
+        marker_top        = marker.offset().top,
+        log_console       = $("#log-console"),
+        tail_target_url   = log_console.attr("data-tail-url"),
+        head_target_url   = log_console.attr("data-head-url"),
+        tail_timer        = null,
+        head_timer        = null,
+        stacktrace_dialog = $("#stacktrace-dialog");
 
     $( window ).scroll( function() { has_scrolled = true; });
+
+    function process_events( container ) {
+        $(container).find(".event").each( function() {
+            var event = $(this);
+
+            event.find("*[data-trigger='stacktrace']").click( function() {
+                var url = $(this).attr("data-url");
+
+                $('body').modalmanager('loading');
+
+                // stacktrace_dialog.find(".modal-body").empty();
+
+                stacktrace_dialog.find(".modal-body").load(url, '', function(){
+                    stacktrace_dialog.modal();
+                });
+
+            });
+        });
+    }
 
     function load_tail_events() {
         var last_event = log_console.find(".event").filter(":last");
@@ -73,7 +93,13 @@ $(function() {
                     marker.remove();
                     clearInterval( tail_timer );
                 } else {
-                    marker.before( data );
+                    var container = $("<span></span>");
+
+                    container.append( data );
+
+                    marker.before( container );
+
+                    process_events( container );
                 }
             },
             error: function( jqXHR, textStatus, errorThrown ) {
@@ -108,7 +134,13 @@ $(function() {
                 if ( data == null || data.trim().length == 0 ) {
                     //- Nothing to report
                 } else {
+                    var container = $("<span></span>");
+
+                    container.append( data );
+
                     log_console.prepend( data );
+
+                    process_events( container );
                 }
             },
             complete: function( jqXHR, textStatus ) {

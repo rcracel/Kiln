@@ -82,6 +82,8 @@ Kiln::Application.routes.draw do
     match '/internal/events/tail' => 'internal#events_tail', :as => :internal_events_tail
     match '/internal/events/head' => 'internal#events_head', :as => :internal_events_head
 
+    match '/internal/events/:id/stacktrace' => 'internal#event_stacktrace', :as => :internal_event_stacktrace
+
   end
 
   # See how all your routes lay out with "rake routes"

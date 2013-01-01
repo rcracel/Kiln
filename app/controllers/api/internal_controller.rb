@@ -56,6 +56,18 @@ class Api::InternalController < ApplicationController
         end
     end
 
+    def event_stacktrace
+        event = Event.find( params[ :id ] )
+
+        if event.nil?
+            render :nothing => true, :status => :not_found
+        else
+            formatted_stacktrace = event.stack_trace
+
+            render :text => "<pre class='formatted_stacktrace'>#{formatted_stacktrace}</pre>"
+        end
+    end
+
 private
 
     def build_query_options( query_options )        
