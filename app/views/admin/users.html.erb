@@ -25,6 +25,8 @@
     </tbody>
 </table>
 
+<%= current_user.roles %>
+
 <% has_role( :admin ) do %>
     <%= render "admin/user_provisioning_form" %>
 <% end %>
