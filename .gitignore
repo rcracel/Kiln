@@ -33,4 +33,4 @@ pickle-email-*.html
 
 config/overrides/*
 
-*/.DS_Store
+.DS_Store
