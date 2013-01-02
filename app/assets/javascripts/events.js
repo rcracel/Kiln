@@ -138,7 +138,7 @@ $(function() {
 
                     container.append( data );
 
-                    log_console.prepend( data );
+                    log_console.prepend( container );
 
                     process_events( container );
                 }
