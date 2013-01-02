@@ -1,7 +1,7 @@
 <div class='event <%= (event.log_level || "").downcase() %> <%= @selected_format %>' object-id="<%= event.id %>"> 
 
     <div class='event-date'>
-        <%= apply_timezone( event.timestamp ).strftime("%Y-%m-%d %H:%M:%S") unless event.timestamp.nil? %>
+        <%= event.timestamp.strftime("%Y-%m-%d %H:%M:%S") unless event.timestamp.nil? %>
     </div> 
 
     <div class='event-level'><%= event.log_level %></div> 
