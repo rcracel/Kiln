@@ -64,7 +64,10 @@ Kiln::Application.routes.draw do
 
   match '/dashboard' => 'welcome#index', :as => :dashboard
 
-  match '/users' => 'admin#users', :as => :user_list
+  match '/users' => 'admin#users', :as => :user_list, :via => :get
+  match '/users' => 'admin#provision_user', :as => :provision_user, :via => :put
+  match '/users/:id/confirm_delete' => 'admin#confirm_delete_user', :as => :delete_user, :via => :get
+  match '/users/:id/delete' => 'admin#do_delete_user', :as => :do_delete_user, :via => :post
 
   match '/events' => 'events#index', :as => :events
 
@@ -82,7 +85,7 @@ Kiln::Application.routes.draw do
     match '/internal/events/tail' => 'internal#events_tail', :as => :internal_events_tail
     match '/internal/events/head' => 'internal#events_head', :as => :internal_events_head
 
-    match '/internal/events/:id/stacktrace' => 'internal#event_stacktrace', :as => :internal_event_stacktrace
+    match '/internal/events/:id/stacktrace' => 'internal#event_stacktrace', :as => :internal_event_stacktrace    
 
   end
 

@@ -15,3 +15,7 @@
  *= require 'events'
  *= require 'documentation'
  */
+
+body {
+    padding-top: 54px;
+}

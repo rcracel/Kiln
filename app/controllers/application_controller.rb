@@ -18,6 +18,12 @@ private
         redirect_to login_url, alert: "Not authorized" if current_user.nil?
     end
 
+    def require_admin
+        if not current_user.roles.include? :admin
+            redirect_to events_path, :flash => { :error => "You must be an administrator to perform this function" }
+        end
+    end
+
     def user_time_zone( &block )
         Time.use_zone( current_user.timezone, &block )
     end

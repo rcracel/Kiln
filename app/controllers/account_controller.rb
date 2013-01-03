@@ -12,7 +12,8 @@ class AccountController < ApplicationController
     current_user.update_attributes( params[ :user ] )
 
     if @user.save
-        redirect_to dashboard_path
+        flash[ :info ] = "You account has been updated"
+        redirect_to user_account_path
     else
         render "edit"
     end
