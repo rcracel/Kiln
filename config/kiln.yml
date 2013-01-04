@@ -1,5 +1,10 @@
 defaults: &defaults
     allow_new_users: true
+    site:
+        name: Kiln
+        url: http://www.nevermindsoft.com
+        admin: Kiln Administrator
+        admin_email: webmaster@nevermindsoft.com
 
 development:
     <<: *defaults

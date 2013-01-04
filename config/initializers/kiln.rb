@@ -4,7 +4,7 @@ APP_CONFIG = YAML.load_file("#{Rails.root}/config/kiln.yml")[Rails.env]
 kiln_override_file = Pathname.new( File.join( File.expand_path("~"), "kiln.yml" ) )
 if kiln_override_file.file?
     puts "Merging Kiln configuration file #{kiln_override_file}"
-    APP_CONFIG.merge! YAML.load( kiln_override_file.read )
+    APP_CONFIG.merge! YAML.load( kiln_override_file.read )[Rails.env]
 end
 
 # optional external configuration file path:
@@ -28,8 +28,12 @@ if db_config_local_file.file?
     config.merge! YAML.load( db_config_local_file.read )
 end
 
+# Configure MongoMapper
 begin
     MongoMapper.setup( config, Rails.env, :logger => Rails.logger ) unless config.empty?    
 rescue
     puts "Could not initalize mongo connection"
 end
+
+# Configure ActionMailer 
+ActionMailer::Base.smtp_settings = APP_CONFIG["mail_server"].symbolize_keys!

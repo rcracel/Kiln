@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
-    skip_before_filter :authorize, :only => [ :new, :create ]
+    skip_before_filter :authorize, :only => [ :signup, :do_signup ]
 
-    def new
+    def signup
         # Prevent a user currently logged in to create a new account
         if ( not current_user.nil? )
             redirect_to root_path
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
         render "new", :layout => "plain"
     end
 
-    def create
+    def do_signup
         # Prevent a user currently logged in to create a new account
         if ( not current_user.nil? )
             redirect_to root_path
@@ -31,13 +31,16 @@ class UsersController < ApplicationController
 
         @user = User.new( params[:user] )
 
-        @user.roles = [ :user ]
+        # Auto provision and make admin the first user to register on the site
         if ( User.count == 0 )
-            @user.roles << :admin
+            @user.roles << [ :user, :admin ]
         end
 
         if @user.save
+            AccountEmailer.registration_email( @user ).deliver
+
             session[:user_id] = @user.id
+
             redirect_to root_url, notice: "Thank you for signing up!"
         else
             render "new", :layout => "plain"

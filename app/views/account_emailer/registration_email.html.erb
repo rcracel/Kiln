@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+</head>
+  
+<body>
+
+    Welcome,
+
+    <p>a new account has been created for you at <a href="<%= APP_CONFIG['site']['url'] %>"><%= APP_CONFIG['site']['name'] %></a>.</p>
+
+    <p>Please take a moment to login and complete your profile information using the following credentials:</p>
+
+    <p><b>Your login information:</b></p>
+
+    <dl>
+        <dt>Login</dt>
+        <dd><%= @user.email %></dd>
+
+        <dt>Password</dt>
+        <dd><%= @user.password %></dd>
+    </dl>
+
+    <%= APP_CONFIG['site']['admin'] %><br />
+    <a href="mailto:<%= APP_CONFIG['site']['admin_email'] %>"><%= APP_CONFIG['site']['admin_email'] %></a>
+
+</body>
+
+</html>

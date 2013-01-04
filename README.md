@@ -35,6 +35,20 @@ In addition to overriding the database configuration, there are a few other sett
 ```yaml
 defaults: &defaults
     allow_new_users: true
+    site:
+        name: Kiln
+        url: http://www.nevermindsoft.com
+        admin: Kiln Administrator
+        admin_email: webmaster@nevermindsoft.com
+
+    mail_server:
+        user_name: mail_user
+        password: mail_password
+        domain: site domain
+        address: smtp server
+        port: smtp server port
+        authentication: plain
+        enable_starttls_auto: true
 
 development:
     <<: *defaults
@@ -48,6 +62,40 @@ production:
 
 ####\[environment\]:allow_new_users
 Determines where the application allows new users to register. If set to false only existing users will have access to the application. You can use this option to prevent unauthorized users to see your log files.
+
+####\[environment\]\[site\]:name
+You can use this property to specify the name of the site. If not specified, it will default to 'Kiln'.
+
+####\[environment\]\[site\]:url
+You should use this to specify the site url. This is used by the mailer to embed links on emails sent to users, such as registration, notifications, and others.
+
+####\[environment\]\[site\]:admin
+You may specify the name of the site administrator. This is used by the mailer to sign outgoing emails from the server.
+
+####\[environment\]\[site\]:admin_email
+You may specify the email address of the site administrator. This is used by the mailer to sign outgoing emails from the server.
+
+####\[environment\]\[mail_server\]:user_name
+You should specify the email user name if your outgoing (smtp) email server requires authentication.
+
+####\[environment\]\[mail_server\]:password
+You should specify the email user password if your outgoing (smtp) email server requires authentication.
+
+####\[environment\]\[mail_server\]:domain
+You may need to specify the domain your emails will come from depending on the requirements from your smtp provider.
+
+####\[environment\]\[mail_server\]:address
+You need to specify the server name or ip address for your smtp provider if you want to be able to send emails. *Emails are necessary for user creation, as this is the mechanism used to deliver the site generated password for a new user.*
+
+####\[environment\]\[mail_server\]:port
+You need to specify the server port for your smtp provider if you want to be able to send emails. *Emails are necessary for user creation, as this is the mechanism used to deliver the site generated password for a new user.*
+
+####\[environment\]\[mail_server\]:authentication
+You may need to specify the authentication type for your smtp provider. *Check your provider's documentation to find out what this needs to be set to.*
+
+####\[environment\]\[mail_server\]:enable_starttls_auto
+You may need to ttls for your smtp provider. *Check your provider's documentation to find out what this needs to be set to.*
+
 
 ## config/mongo.yml
 

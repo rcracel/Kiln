@@ -15,7 +15,8 @@ private
     helper_method :current_user
 
     def authorize
-        redirect_to login_url, alert: "Not authorized" if current_user.nil?
+        redirect_to login_url, alert: "You must loging to access the requested page" if current_user.nil?
+        redirect_to login_url, alert: "Your accound has not been authorized yet" if not current_user.roles.include? :user
     end
 
     def require_admin

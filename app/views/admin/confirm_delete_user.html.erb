@@ -1,15 +1,13 @@
 <div class="container">
     <div class="row">
-        <div class="span4 offset4 well">
-            <legend>Delete User?</legend>
+        <div class="span6 offset3 well">
+            <legend style="text-align: center;">Delete User <%= @user.email %> ?</legend>
 
             <%= form_for @user, :url => delete_user_path, :html => { :class => "form-horizontal" } do |f| %>
 
-            <div class="control-group">
-                <%= f.label :first_name, "First Name", :class => "control-label" %>
-                <div class="controls">
-                    <%= f.text_field :first_name, :placeholder => "First Name", :class => :disabled %>
-                </div>
+            <div style="text-align: center;">
+                <%= link_to "Delete", do_delete_user_path( @user ), :class => [ "btn", "btn-danger" ] %>
+                <%= link_to "Cancel", user_list_path, :class => [ "btn", "btn-primary" ] %>
             </div>
 
             <% end %>

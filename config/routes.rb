@@ -50,8 +50,8 @@ Kiln::Application.routes.draw do
   # just remember to delete public/index.html.
   root :to => 'welcome#index'
 
-  match '/signup' => 'users#new', :as => :signup, :via => :get
-  match '/signup' => 'users#create', :as => :create_user, :via => :post
+  match '/signup' => 'users#signup', :as => :signup, :via => :get
+  match '/signup' => 'users#do_signup', :as => :do_signup, :via => :post
 
   match '/login' => 'sessions#new', :as => :login
 
@@ -65,9 +65,12 @@ Kiln::Application.routes.draw do
   match '/dashboard' => 'welcome#index', :as => :dashboard
 
   match '/users' => 'admin#users', :as => :user_list, :via => :get
-  match '/users' => 'admin#provision_user', :as => :provision_user, :via => :put
   match '/users/:id/confirm_delete' => 'admin#confirm_delete_user', :as => :delete_user, :via => :get
-  match '/users/:id/delete' => 'admin#do_delete_user', :as => :do_delete_user, :via => :post
+  match '/users/:id/delete' => 'admin#do_delete_user', :as => :do_delete_user, :via => :get
+  match '/users/:id/promote' => 'admin#promote_user', :as => :promote_user, :via => :get
+  match '/users/:id/demote' => 'admin#demote_user', :as => :demote_user, :via => :get
+  match '/users/new' => 'admin#create_user', :as => :create_user, :via => :get
+  match '/users/new' => 'admin#do_create_user', :as => :do_create_user, :via => :post
 
   match '/events' => 'events#index', :as => :events
 

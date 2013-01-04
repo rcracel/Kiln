@@ -12,7 +12,7 @@
             </div>
             <% end %>
 
-            <%= form_for @user, :url => create_user_path do |f| %>
+            <%= form_for @user, :url => do_signup_path do |f| %>
                 <div class="clearfix">
                     <%= f.text_field :email, :placeholder => "Email Address" %>
                 </div>
