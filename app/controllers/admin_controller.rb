@@ -8,14 +8,21 @@ class AdminController < ApplicationController
 
     def confirm_delete_user
         @user = User.find( params[ :id ] )
+
+        if @user == current_user
+            redirect_to user_list_path, :flash => { :warn => "You cannot delete yourself" }
+        end           
     end
 
     def do_delete_user
         user = User.find( params[ :id ] )
 
-        flash[ :error ] = "Could not delete selected user" unless user.delete
-
-        redirect_to user_list_path
+        if user == current_user
+            redirect_to user_list_path, :flash => { :warn => "You cannot delete yourself" }
+        else
+            flash[ :error ] = "Could not delete selected user" unless user.delete
+            redirect_to user_list_path
+        end
     end
 
     def promote_user
@@ -77,6 +84,28 @@ class AdminController < ApplicationController
         else
             render "create_user", :flash => { :error => "Could not save user, please correct any errors and try again" }
         end
+    end
+
+    def authorize_user
+        user = User.find( params[ :id ] )
+
+        if not user.roles.include? :user
+            user.roles << :user
+            user.save
+        end
+
+        redirect_to user_list_path, :flash => { :info => "User #{user.email} has been authorized and can now access the application" }
+    end
+
+    def deauthorize_user
+        user = User.find( params[ :id ] )
+
+        if user.roles.include? :user
+            user.roles.delete :user
+            user.save
+        end
+
+        redirect_to user_list_path, :flash => { :info => "User #{user.email} has been authorized and can now access the application" }
     end
 
 end

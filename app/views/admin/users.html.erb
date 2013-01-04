@@ -25,11 +25,18 @@
 
                             <% has_role( :admin ) do %>
                             <td>
-                                <%= link_to( "Delete", delete_user_path( user ), :class => [ 'btn-danger', 'btn', 'btn-small' ] ) %>
-                                <% if user.roles.include? :admin %>
-                                    <%= link_to( "Demote", demote_user_path( user ), :class => [ 'btn', 'btn-warning', 'btn-small' ] ) %>
+                                <% if user == current_user %>
+                                    &nbsp;
                                 <% else %>
-                                    <%= link_to( "Promote", promote_user_path( user ), :class => [ 'btn', 'btn-primary', 'btn-small' ] ) %>
+                                    <%= link_to "Delete", delete_user_path( user ), :class => [ 'btn-danger', 'btn', 'btn-small' ] %>
+                                    <% if not user.roles.include? :user %>
+                                        <%= link_to "Authorize", authorize_user_path( user ), :class => [ 'btn', 'btn-success', 'btn-small' ] %>
+                                    <% elsif user.roles.include? :admin %>
+                                        <%= link_to "Demote", demote_user_path( user ), :class => [ 'btn', 'btn-warning', 'btn-small' ] %>
+                                    <% else %>
+                                        <%= link_to "Promote", promote_user_path( user ), :class => [ 'btn', 'btn-primary', 'btn-small' ] %>
+                                        <%= link_to "Deauthorize", deauthorize_user_path( user ), :class => [ 'btn', 'btn-small', 'btn-info' ] %>
+                                    <% end %>
                                 <% end %>
                             </td>
                             <% end %>

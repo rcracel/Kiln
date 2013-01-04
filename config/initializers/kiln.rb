@@ -36,4 +36,4 @@ rescue
 end
 
 # Configure ActionMailer 
-ActionMailer::Base.smtp_settings = APP_CONFIG["mail_server"].symbolize_keys!
+ActionMailer::Base.smtp_settings = APP_CONFIG["mail_server"].symbolize_keys! unless APP_CONFIG["mail_server"].nil?
