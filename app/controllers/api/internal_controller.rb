@@ -68,6 +68,34 @@ class Api::InternalController < ApplicationController
         end
     end
 
+    # This method will match users ( first name, last name, and email ) to the term supplied on the
+    # params via params[ :term ] and return a collection of objects with highlighted values. The terms
+    # parameter will be tokenized and or'd.
+    def user_list
+        users = []
+
+        if not params[ :term ].blank?
+            terms      = params[ :term ].split(/\s+/)
+            regex_term = Regexp.new( "(#{terms.join("|")})", "i" )
+            users      = User.where({
+                :$or => [
+                    { :email => regex_term },
+                    { :first_name => regex_term },
+                    { :last_name => regex_term }
+                ]
+            }).fields( :id, :first_name, :last_name, :email ).collect do |u|
+                {
+                    :id => u.id,
+                    :name => "#{u.first_name} #{u.last_name}".strip.gsub( regex_term, '<b>\1</b>' ),
+                    :email => u.email.strip.gsub( regex_term, '<b>\1</b>' )
+                }
+            end
+
+        end
+
+        render :json => users
+    end
+
 private
 
     def build_query_options( query_options )        

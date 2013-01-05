@@ -13,10 +13,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
-//= require bootstrap-modalmanager
-//= require bootstrap-modal
-//= require bootstrap-modal-extension
-//= require_tree .
+//= require libs/bootstrap-modalmanager
+//= require libs/bootstrap-modal
+//= require libs/bootstrap-modal-extension
+//= require libs/bootstrap-datepicker
 
 
 function set_cookie( name, value, expires, path, domain, secure ) {

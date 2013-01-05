@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
         # Auto provision and make admin the first user to register on the site
         if ( User.count == 0 )
-            @user.roles << [ :user, :admin ]
+            @user.roles = [ :user, :admin ]
         end
 
         if @user.save

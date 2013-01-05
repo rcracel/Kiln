@@ -78,6 +78,8 @@ Kiln::Application.routes.draw do
 
   match '/apps' => 'applications#index', :as => :applications, :via => :get
   match '/apps' => 'applications#create', :as => :create_application, :via => :post
+  match '/apps/:id/users' => 'applications#authorized_users', :as => :application_authorized_users, :via => :get
+  match '/apps/:id/users' => 'applications#update_authorized_users', :as => :application_update_authorized_users, :via => :post
 
   match '/docs' => 'documentation#index', :as => :documentation
 
@@ -91,6 +93,7 @@ Kiln::Application.routes.draw do
     match '/internal/events/head' => 'internal#events_head', :as => :internal_events_head
 
     match '/internal/events/:id/stacktrace' => 'internal#event_stacktrace', :as => :internal_event_stacktrace    
+    match '/internal/users/search' => 'internal#user_list', :as => :internal_user_list
 
   end
 

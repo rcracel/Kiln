@@ -1,0 +1,45 @@
+// Place all the styles related to the documentation controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+ul#candidate_user_list {
+    margin: 0;
+
+    li {
+        list-style: none;
+        margin: 0 0 8px 0;
+        padding: 4px;
+        position: relative;
+
+        small { display: block; }
+
+        i {
+            position: absolute;
+            top: 50%;
+            margin-top: -6px;
+            right: 4px;
+            cursor: pointer;
+        }
+    }
+
+    li.disabled {
+        i { display: none; }
+        color: #AAA;
+    }
+}
+
+ul#authorized_user_list {
+    margin: 0;
+    padding: 40px 0 0 0;
+
+    li {
+        list-style: none;
+        padding: 4px;
+        position: relative;
+        margin: 0 0 8px 0;
+
+        i {
+            cursor: pointer;
+        }
+    }
+}
