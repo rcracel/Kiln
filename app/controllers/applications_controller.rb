@@ -1,12 +1,12 @@
 class ApplicationsController < ApplicationController
 
     def index
-        @applications = Application.where( owner_id: current_user.id )
+        @applications = Application.visible_by_user( current_user )
         @application  = Application.new( params[ :application ] )
     end
 
     def create
-        @applications = Application.where( owner_id: current_user.id )
+        @applications = Application.visible_by_user( current_user )
         @application  = Application.new( params[ :application ] )
 
         @application.owner = current_user
@@ -20,6 +20,12 @@ class ApplicationsController < ApplicationController
 
     def authorized_users
         @application = Application.find params[ :id ]
+
+        if @application.owner != current_user
+            flash[ :error ] = "You are not authorized to modify permissions for #{application.name}"
+            redirect_to applications_path
+        end
+
     end
 
     def update_authorized_users

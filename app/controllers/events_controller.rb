@@ -12,7 +12,7 @@ class EventsController < ApplicationController
         end
 
         # Get list of all applications and resolve currently selected one
-        @applications = Application.all.collect { |a| [ a.name, a.id.to_s ] }
+        @applications = Application.visible_by_user( current_user ).collect { |a| [ a.name, a.id.to_s ] }
         selected_application_id = unless ( @applications.find { |a| a[1] == cookies[ :selected_application_id ] } )
             cookies[ :selected_application_id ] = nil
         end

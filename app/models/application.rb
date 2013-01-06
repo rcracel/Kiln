@@ -21,8 +21,12 @@ class Application
 
     before_create :generate_key
 
-    def self.for_user( user )
-        self.all( { :$or => [ { :owner => user }, { $authorized_users => user.id } ] } )
+    def self.visible_by_user( user )
+        condition = {}
+
+        condition[ :$or ] = [ { :owner => user.id }, { :authorized_users_ids => user.id } ] unless user.roles.include? :admin
+
+        self.where( condition )
     end
 
 private

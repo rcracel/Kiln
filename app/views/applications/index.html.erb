@@ -1,6 +1,11 @@
 <div class="container">
     <div class="row">
         <div class="span12">
+            <% if @applications.empty? %>
+            <div class="alert">
+              <strong>You have no applications registered.</strong> Use the form below to acquire an api key.
+            </div>
+            <% else %>
             <table class="table table-condensed table-hover table-striped table-bordered">
                 <thead>
                     <tr>
@@ -15,18 +20,27 @@
                     <% @applications.each do |application| %>
                         <tr>
                             <td><%= application.name %></td>
-                            <td><%= application.api_key %></td>
+                            <td>
+                                <% if current_user.roles.include? :admin or application.owner == current_user %>
+                                    <%= application.api_key %>
+                                <% else %>
+                                    <em>(private)</em>
+                                <% end %>
+                            </td>
                             <td><%= application.owner.name || application.owner.email %></td>
                             <td>
                                 <%= application.authorized_users.count %>
                                 
+                                <% if application.owner == current_user %>
                                 &nbsp;<%= link_to "Edit", application_authorized_users_path( application ), :class => ['btn', 'btn-mini'] %>
+                                <% end %>
                             </td>
                             <td><%= application.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
                         </tr>
                     <% end %>
                 </tbody>
             </table>
+            <% end %>
         </div>
     </div>
 </div>

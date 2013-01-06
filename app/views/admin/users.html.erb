@@ -18,7 +18,12 @@
                 <tbody>
                     <% @users.each do |user| %>
                         <tr>
-                            <td><%= user.first_name %> <%= user.last_name %></td>
+                            <td>
+                                <%= user.first_name %> <%= user.last_name %>
+                                <% if user == current_user %>
+                                <em>(you)</em>
+                                <% end %>
+                            </td>
                             <td><%= user.email %></td>
                             <td><%= user.roles.collect { |r| r.to_s }.join(", ") %></td>
                             <td><%= user.created_at.strftime("%Y-%m-%d %H:%M:%S %z") %></td>

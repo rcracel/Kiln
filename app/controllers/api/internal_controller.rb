@@ -104,6 +104,20 @@ private
         query_options[ :environment_name ] = cookies[ :selected_environment_name ] unless cookies[ :selected_environment_name ].blank?
         query_options[ :log_level ]        = cookies[ :selected_log_level ] unless cookies[ :selected_log_level ].blank?            
         
+        query_options[ :application_id ] = "50E3BC17B11E9160290001EC"
+
+        # Ensure we only retrieve application the current user has access to
+        visible_app_ids = Application.visible_by_user( current_user ).fields( :id ).collect { |app| app.id.to_s }
+        if not visible_app_ids.include? query_options[ :application_id ]
+            query_options.delete( :application_id )
+            cookies[ :selected_application_id ] = nil
+        end
+
+        # If we don't have a specific application selected, ensuer we only return ones the current user can see
+        if query_options[ :application_id ].nil?
+            query_options[ :application_id ] = visible_app_ids
+        end
+
         # As usual, dates are more complicated....
         selected_date_from = cookies[ :selected_date_from ]
         if ( not selected_date_from.blank? )
