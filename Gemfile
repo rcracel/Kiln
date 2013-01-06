@@ -25,6 +25,8 @@ end
 
 gem 'jquery-rails'
 
+# gem 'gchart'
+
 gem 'mongo_mapper'
 
 gem 'libv8', '~> 3.11.8'

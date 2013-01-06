@@ -1,16 +1,98 @@
+<%- content_for( :javascript ) do -%>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load('visualization', '1.0', {'packages':['corechart']});
+    google.setOnLoadCallback( drawAll );
+
+    function drawAll() {
+        draw_events_count_by_app();
+        draw_events_count_by_module();
+        draw_events_count_by_level();
+    }
+
+    function draw_events_count_by_app() {
+        var data_table          = [
+                 ['Application Name', 'Events']
+            <% @chart_data[ :event_count_for_app ].each do |key, value| %>
+                ,['<%= key.gsub("'", "\\'") %>', <%= value %>]
+            <% end %>
+            ],
+            data = google.visualization.arrayToDataTable( data_table ),
+            options = {
+            title: 'Events by App'
+            },
+            chart = new google.visualization.PieChart(document.getElementById('events_count_by_app'));
+
+            chart.draw(data, options);
+    }
+
+    function draw_events_count_by_module() {
+        var data_table          = [
+                 ['Module Name', 'Events']
+            <% @chart_data[ :events_count_by_module ].each do |key, value| %>
+                ,['<%= key.gsub("'", "\\'") %>', <%= value %>]
+            <% end %>
+            ],
+            data = google.visualization.arrayToDataTable( data_table ),
+            options = {
+            title: 'Events by Module'
+            },
+            chart = new google.visualization.PieChart(document.getElementById('events_count_by_module'));
+
+            chart.draw(data, options);
+    }
+
+    function draw_events_count_by_level() {
+        var data_table          = [
+                 ['Log Level', 'Events']
+            <% @chart_data[ :events_count_by_level ].each do |key, value| %>
+                ,['<%= key.gsub("'", "\\'") %>', <%= value %>]
+            <% end %>
+            ],
+            data = google.visualization.arrayToDataTable( data_table ),
+            options = {
+            title: 'Events by Module'
+            },
+            chart = new google.visualization.PieChart(document.getElementById('events_count_by_level'));
+
+            chart.draw(data, options);        
+    }
+
+</script>
+<%- end -%>
+
 <div class="container">
     <div class="row">
-        <div class="span4">
-            User Stats
+        <div class="span12">
+            <div class="hero-unit">
+                <h1>Kiln Dashboard</h1>
+                <p>Use the controls below to customize your dashboard experience to suit your specific needs.</p>
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
+
+        <div class="span4">
+            <h3>Events By App</h3>
+
+            <div class="graph" id="events_count_by_app">
+
+            </div>
         </div>
         <div class="span4">
-            Applications Stats
+            <h3>Events by Module</h3>
 
+            <div class="graph" id="events_count_by_module">
+
+            </div>
         </div>
         <div class="span4">
-            Usage Statistics
+            <h3>Events by level</h3>
 
+            <div class="graph" id="events_count_by_level">
+
+            </div>
         </div>
     </div>
 </div>

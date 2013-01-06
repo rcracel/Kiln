@@ -15,6 +15,7 @@
  *= require 'events'
  *= require 'documentation'
  *= require 'applications'
+ *= require 'welcome'
  */
 
 body {
