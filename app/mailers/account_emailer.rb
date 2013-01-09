@@ -5,14 +5,13 @@ class AccountEmailer < ActionMailer::Base
     def registration_email( user )
         @user = user
 
-        mail( :to => user.email, :subject => "Thank you for Registering", :template => "email" )
+        mail( :to => user.email, :subject => "Thank you for Registering" )
     end
 
     def password_reset_email( user )
-        recipients  user.email
-        from        "webmaster@nevermindsoft.com"
-        subject     "Password Reset Requested"
-        body        :user => user
+        @user = user
+
+        mail( :to => user.email, :subject => "Password Reset Requested" )
     end
 
 end
