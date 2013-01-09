@@ -29,8 +29,6 @@ end
 
 gem 'jquery-rails'
 
-# gem 'gchart'
-
 gem 'mongo_mapper'
 
 gem "twitter-bootstrap-rails"

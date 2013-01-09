@@ -5,13 +5,13 @@ class AccountEmailer < ActionMailer::Base
     def registration_email( user )
         @user = user
 
-        mail( :to => user.email, :subject => "Thank you for Registering" )
+        mail( :from => APP_CONFIG['site']['admin_email'], :to => user.email, :subject => "Thank you for Registering" )
     end
 
     def password_reset_email( user )
         @user = user
 
-        mail( :to => user.email, :subject => "Password Reset Requested" )
+        mail( :from => APP_CONFIG['site']['admin_email'], :to => user.email, :subject => "Password Reset Requested" )
     end
 
 end
