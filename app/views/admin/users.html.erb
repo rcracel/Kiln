@@ -1,62 +1,55 @@
-<div class="container">
-    <div class="row">
-        <div class="span12">
-            <table class="table table-condensed table-hover table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Roles</th>
-                        <th>Date Joined</th>
+<table class="table table-condensed table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Date Joined</th>
 
-                        <% has_role( :admin ) do %>
-                        <th>Actions</th>
-                        <% end %>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <% @users.each do |user| %>
-                        <tr>
-                            <td>
-                                <%= user.first_name %> <%= user.last_name %>
-                                <% if user == current_user %>
-                                <em>(you)</em>
-                                <% end %>
-                            </td>
-                            <td><%= user.email %></td>
-                            <td><%= user.roles.collect { |r| r.to_s }.join(", ") %></td>
-                            <td><%= user.created_at.strftime("%Y-%m-%d %H:%M:%S %z") %></td>
-
-                            <% has_role( :admin ) do %>
-                            <td>
-                                <% if user == current_user %>
-                                    &nbsp;
-                                <% else %>
-                                    <%= link_to "Delete", delete_user_path( user ), :class => [ 'btn-danger', 'btn', 'btn-small' ] %>
-                                    <% if not user.roles.include? :user %>
-                                        <%= link_to "Authorize", authorize_user_path( user ), :class => [ 'btn', 'btn-success', 'btn-small' ] %>
-                                    <% elsif user.roles.include? :admin %>
-                                        <%= link_to "Demote", demote_user_path( user ), :class => [ 'btn', 'btn-warning', 'btn-small' ] %>
-                                    <% else %>
-                                        <%= link_to "Promote", promote_user_path( user ), :class => [ 'btn', 'btn-primary', 'btn-small' ] %>
-                                        <%= link_to "Deauthorize", deauthorize_user_path( user ), :class => [ 'btn', 'btn-small', 'btn-info' ] %>
-                                    <% end %>
-                                <% end %>
-                            </td>
-                            <% end %>
-
-                        </tr>
-                    <% end %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div style="text-align: center">
             <% has_role( :admin ) do %>
-                <%= link_to "Create New User", create_user_path, :class => [ 'btn' ] %>
+            <th>Actions</th>
             <% end %>
-        </div>
-    </div>
+
+        </tr>
+    </thead>
+    <tbody>
+        <% @users.each do |user| %>
+            <tr>
+                <td>
+                    <%= user.first_name %> <%= user.last_name %>
+                    <% if user == current_user %>
+                    <em>(you)</em>
+                    <% end %>
+                </td>
+                <td><%= user.email %></td>
+                <td><%= user.roles.collect { |r| r.to_s }.join(", ") %></td>
+                <td><%= user.created_at.strftime("%Y-%m-%d %H:%M:%S %z") %></td>
+
+                <% has_role( :admin ) do %>
+                <td>
+                    <% if user == current_user %>
+                        &nbsp;
+                    <% else %>
+                        <%= link_to "Delete", delete_user_path( user ), :class => [ 'btn-danger', 'btn', 'btn-small' ] %>
+                        <% if not user.roles.include? :user %>
+                            <%= link_to "Authorize", authorize_user_path( user ), :class => [ 'btn', 'btn-success', 'btn-small' ] %>
+                        <% elsif user.roles.include? :admin %>
+                            <%= link_to "Demote", demote_user_path( user ), :class => [ 'btn', 'btn-warning', 'btn-small' ] %>
+                        <% else %>
+                            <%= link_to "Promote", promote_user_path( user ), :class => [ 'btn', 'btn-primary', 'btn-small' ] %>
+                            <%= link_to "Deauthorize", deauthorize_user_path( user ), :class => [ 'btn', 'btn-small', 'btn-info' ] %>
+                        <% end %>
+                    <% end %>
+                </td>
+                <% end %>
+
+            </tr>
+        <% end %>
+    </tbody>
+</table>
+
+<div style="text-align: center">
+    <% has_role( :admin ) do %>
+        <%= link_to "Create New User", create_user_path, :class => [ 'btn' ] %>
+    <% end %>
 </div>

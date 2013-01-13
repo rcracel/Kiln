@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+        <div class="span6 offset3 well">
+            <legend style="text-align: center;">Delete User <%= @group.name %> ?</legend>
+
+            <%= form_for @group, :url => do_delete_group_path, :html => { :method => :delete, :class => "form-horizontal" } do |f| %>
+
+            <div style="text-align: center;">
+                <%= submit_tag "Delete", :class => "btn btn-danger", :id => "submit_button" %>
+                <%= link_to "Cancel", group_management_path, :class => [ "btn", "btn-primary" ] %>
+            </div>
+
+            <% end %>
+
+        </div>
+    </div>
+</div>

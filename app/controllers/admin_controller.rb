@@ -1,6 +1,72 @@
 class AdminController < ApplicationController
 
-    before_filter :require_admin, :except => :users
+    before_filter :require_admin
+
+    def home
+    end
+
+    ########################################
+    # User Groups
+
+    def groups
+        @groups = UserGroup.all
+        @group  = UserGroup.new params[ :user_group ]
+    end
+
+    def do_create_group
+        groups
+
+        if @group.save
+            if params[ :go_to_users ]
+                redirect_to manage_group_users_path( @group )
+            else
+                redirect_to group_management_path
+            end
+        else
+            render "groups", :flash => { :error => "Could not save user group, please correct any errors and try again" }
+        end
+    end
+
+    def delete_group
+        @group = UserGroup.find params[ :id ]
+
+        render "confirm_delete_group"
+    end
+
+    def do_delete_group
+        UserGroup.delete params[ :id ]
+
+        redirect_to group_management_path
+    end
+
+    def group_users
+        @group = UserGroup.find params[ :id ]
+    end
+
+    def update_group_users
+        group = UserGroup.find params[ :id ]
+
+        users = params["users"]
+
+        group.users = []
+
+        if not users.nil?
+            users.each do |user_id|
+                group.users << User.find( user_id )
+            end
+        end
+
+        if group.save
+            flash[ :info ] = "Successfully group #{group.name} with #{group.users.length} #{"user".pluralize(group.users.length)}"
+        else
+            flash[ :warn ] = "Cound not update group #{group.name}"
+        end
+
+        redirect_to group_management_path
+    end
+
+    ########################################
+    # Users
 
     def users
         @users = User.all
@@ -10,7 +76,7 @@ class AdminController < ApplicationController
         @user = User.find( params[ :id ] )
 
         if @user == current_user
-            redirect_to user_list_path, :flash => { :warn => "You cannot delete yourself" }
+            redirect_to user_management_path, :flash => { :warn => "You cannot delete yourself" }
         end           
     end
 
@@ -18,10 +84,10 @@ class AdminController < ApplicationController
         user = User.find( params[ :id ] )
 
         if user == current_user
-            redirect_to user_list_path, :flash => { :warn => "You cannot delete yourself" }
+            redirect_to user_management_path, :flash => { :warn => "You cannot delete yourself" }
         else
             flash[ :error ] = "Could not delete selected user" unless user.delete
-            redirect_to user_list_path
+            redirect_to user_management_path
         end
     end
 
@@ -40,7 +106,7 @@ class AdminController < ApplicationController
             flash[ :warn ] = "User #{user.email} is already an admin"
         end
 
-        redirect_to user_list_path
+        redirect_to user_management_path
     end
 
     def demote_user
@@ -60,7 +126,7 @@ class AdminController < ApplicationController
             end
         end
 
-        redirect_to user_list_path
+        redirect_to user_management_path
     end
 
     def create_user
@@ -80,7 +146,7 @@ class AdminController < ApplicationController
         if @user.save
             AccountEmailer.registration_email( @user ).deliver
 
-            redirect_to user_list_path, :notice => "User has been created. An email will be sent to #{@user.email} with instructions on how to complete the registration process"
+            redirect_to user_management_path, :notice => "User has been created. An email will be sent to #{@user.email} with instructions on how to complete the registration process"
         else
             render "create_user", :flash => { :error => "Could not save user, please correct any errors and try again" }
         end
@@ -94,7 +160,7 @@ class AdminController < ApplicationController
             user.save
         end
 
-        redirect_to user_list_path, :flash => { :info => "User #{user.email} has been authorized and can now access the application" }
+        redirect_to user_management_path, :flash => { :info => "User #{user.email} has been authorized and can now access the application" }
     end
 
     def deauthorize_user
@@ -105,7 +171,55 @@ class AdminController < ApplicationController
             user.save
         end
 
-        redirect_to user_list_path, :flash => { :info => "User #{user.email} has been authorized and can now access the application" }
+        redirect_to user_management_path, :flash => { :info => "User #{user.email} has been authorized and can now access the application" }
+    end
+
+    ########################################
+    # Applications
+
+    def apps
+        @applications      = Application.sort( :name )
+        @application       = Application.new( params[ :application ] )
+        @application.owner = current_user
+
+        render "/applications/index"
+    end
+
+    def confirm_delete_app
+        @application = Application.find params[ :id ]
+    end
+
+    def do_delete_app
+        application = Application.find( params[ :id ] )
+
+        Event.destroy_all( { :application_id => application.id } )
+        application.destroy
+
+        redirect_to application_management_path
+    end
+
+    def confirm_reassign_app
+        @application = Application.find params[ :id ]
+    end
+
+    def do_reassign_app
+        application = Application.find params[ :id ]
+        new_owner   = User.find params[ :user_id ]
+
+        if new_owner.nil?
+            confirm_reassign_app
+            flash[ :now ] = "You must specify a valid user as the new owner for #{application.name}"
+            render "confirm_reassign_app"
+        else
+            application.owner = new_owner
+
+            if ( application.save )
+
+            else
+            end
+
+            redirect_to application_management_path
+        end
     end
 
 end

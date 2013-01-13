@@ -1,5 +1,5 @@
 <%- content_for( :javascript ) do %>
-<%= javascript_include_tag "application_users" %>
+<%= javascript_include_tag "user_picker" %>
 <%- end -%>
 
 <div class="container">
@@ -18,7 +18,7 @@
 
             <input id="user_auto_complete_field" type="text" placeholder="Start typing to find users" />
 
-            <ul id="candidate_user_list" user-list-url="<%= api_internal_user_list_url %>">
+            <ul id="candidate_user_list" user-list-url="<%= api_internal_user_list_url( :include_groups => true ) %>">
             </ul>
 
         </div>
@@ -28,12 +28,17 @@
                 <%= submit_tag "Save", :class => [ 'btn', 'btn-info', 'pull-right' ] %>
 
                 <ul id="authorized_user_list">
-                    <% @application.authorized_users.each do |user| %>
-                    <li class="well" object-id="<%= user.id %>">
+                    <% @authorized_objects.each do |item| %>
+                    <li class="well" object-id="<%= item.id %>" object-type="<%= item.class.name.downcase %>">
                         <i class="icon-remove"></i>
-                        <b><%= user.name %></b>
-                        <small><%= user.email %></small>                        
-                        <input type="hidden" name="users[]" value="<%= user.id %>" />
+                        <b><%= item.name %></b>
+                        <% if item.class == User %>
+                            <small><%= item.email %></small>
+                            <input type="hidden" name="users[]" value="<%= item.id %>" />
+                        <% elsif item.class == UserGroup %>
+                            <small>user group</small>
+                            <input type="hidden" name="groups[]" value="<%= item.id %>" />
+                        <% end %>
                     </li>
                     <% end %>
                 </ul>

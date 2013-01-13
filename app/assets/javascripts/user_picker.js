@@ -17,11 +17,15 @@ $(function() {
         });
     }
 
-    function addCandidate( id, name, email ) {
-        var item = $("<li class='well'></li>").attr("object-id", id);
+    function addCandidate( id, name, email, objectType ) {
+        var item = $("<li class='well'></li>").attr("object-id", id).attr("object-type", objectType);
 
         item.append("<b>" + name + "</b> ");
-        item.append("<small>" + email + "</small> ");
+        if ( objectType == "user" ) {
+            item.append("<small>" + email + "</small> ");
+        } else if ( objectType == "usergroup" ) {
+            item.append("<small>user group</small> ");
+        }
         item.append("<i class='icon-forward'></i>");
 
         candidate_list.append( item );
@@ -36,7 +40,7 @@ $(function() {
             success: function( data, textStatus, jqXHR ) {
                 candidate_list.empty();
                 $(data).each( function() {
-                    addCandidate( this["id"], this["name"], this["email"] );
+                    addCandidate( this["id"], this["name"], this["email"], this["type"] );
                 });
                 synchronizeLists();
             }
@@ -49,12 +53,19 @@ $(function() {
         if ( clickTarget.prop("tagName") === "I" ) {
             var candidate = clickTarget.parents("li").first(),
                 authorized = $("<li class='well'></li>"),
-                objectId = candidate.attr("object-id");
+                objectId = candidate.attr("object-id"),
+                objectType = candidate.attr("object-type");
 
             authorized.prepend("<i class='icon-remove'></i> ");
             authorized.append("<b>" + candidate.find("b").first().text() + "</b> ");
             authorized.append("<small>" + candidate.find("small").text() + "</small>");
-            authorized.append("<input type='hidden' name='users[]' value='" + objectId + "' />");
+
+
+            if ( objectType == "user" ) {
+                authorized.append("<input type='hidden' name='users[]' value='" + objectId + "' />");
+            } else if ( objectType == "usergroup" ) {
+                authorized.append("<input type='hidden' name='groups[]' value='" + objectId + "' />");
+            }
 
             authorized.attr("object-id", objectId);
 

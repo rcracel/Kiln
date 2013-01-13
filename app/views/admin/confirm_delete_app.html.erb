@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="span6 offset3 well">
+            <legend style="text-align: center;">Delete Application <%= @application.name %> ?</legend>
+
+            <p style="text-align: center;">Deleting an application will also remove all of its data.</p>
+
+            <p style="text-align: center;" class="text-error">
+                <strong>Warning:</strong>
+                This operation cannot be undone.
+            </p>
+
+            <%= form_for @application, :url => do_delete_app_path, 
+                                       :html => { :class => "form-horizontal", :method => :delete } do |f| %>
+
+            <div style="text-align: center;">
+                <%= submit_tag "Delete", :class => "btn btn-danger", :id => "submit_button" %>
+                <%= link_to "Cancel", application_management_path, :class => [ "btn", "btn-primary" ] %>
+            </div>
+
+            <% end %>
+
+        </div>
+    </div>
+</div>

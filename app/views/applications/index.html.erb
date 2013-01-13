@@ -1,89 +1,92 @@
-<div class="container">
-    <div class="row">
-        <div class="span12">
-            <% if @applications.empty? %>
-            <div class="alert">
-              <strong>You have no applications registered.</strong> Use the form below to acquire an api key.
-            </div>
-            <% else %>
-            <table class="table table-condensed table-hover table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Application Name</th>
-                        <th>API Key</th>
-                        <th>Owner</th>
-                        <th>Users</th>
-                        <th>Date Created</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% @applications.each do |application| %>
-                        <tr>
-                            <td><%= application.name %></td>
-                            <td>
-                                <% if current_user.roles.include? :admin or application.owner == current_user %>
-                                    <%= application.api_key %>
-                                <% else %>
-                                    <em>(private)</em>
-                                <% end %>
-                            </td>
-                            <td><%= application.owner.name || application.owner.email %></td>
-                            <td>
-                                <%= application.authorized_users.count %>
-                                
-                                <% if application.owner == current_user %>
-                                &nbsp;<%= link_to "Edit", application_authorized_users_path( application ), :class => ['btn', 'btn-mini'] %>
-                                <% end %>
-                            </td>
-                            <td><%= application.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
-                        </tr>
-                    <% end %>
-                </tbody>
-            </table>
-            <% end %>
-        </div>
+<% if @applications.empty? %>
+    <div class="alert">
+      <strong>You have no applications registered.</strong> Use the form below to acquire an api key.
     </div>
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="span12 well">
-
-            <legend>Create New Application</legend>
-
-            <% if @application.errors.any? %>
-            <div class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">×</a>
-                <% @application.errors.full_messages.each do |message| %>
-                <%= message %><br />
+<% else %>
+    <table class="table table-condensed table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Application Name</th>
+                <th>API Key</th>
+                <th>Owner</th>
+                <th>Users</th>
+                <th>Date Created</th>
+                <% if current_user.roles.include? :admin %>
+                <th>Actions</th>
                 <% end %>
-            </div>
+            </tr>
+        </thead>
+        <tbody>
+            <% @applications.each do |application| %>
+                <tr>
+                    <td>
+                        <%= application.name %>
+                    </td>
+                    <td>
+                        <% if current_user.roles.include? :admin or application.authorized?( current_user ) %>
+                            <%= application.api_key %>
+                        <% else %>
+                            <em>(private)</em>
+                        <% end %>
+                    </td>
+                    <td><%= application.owner.name || application.owner.email %></td>
+                    <td>
+                        <%= application.user_count %>
+                        
+                        <% if (application.owner == current_user) || (current_user.roles.include? :admin) %>
+                        &nbsp;<%= link_to "Edit", application_authorized_users_path( application ), :class => ['btn', 'btn-mini'] %>
+                        <% end %>
+                    </td>
+
+                    <td><%= application.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+
+                    <% if current_user.roles.include? :admin %>
+                    <td>
+                            <%= link_to "Delete", delete_app_path( application ), :class => [ 'btn', 'btn-mini', 'btn-danger' ] %>
+                            <%= link_to "Switch Owner", reassign_app_path( application ), :class => [ 'btn', 'btn-mini' ] %>
+                    </td>
+                    <% end %>
+                </tr>
             <% end %>
+        </tbody>
+    </table>
+<% end %>
 
-            <%= form_for @application, :url => create_application_path, :html => { :class => "form-horizontal" } do |f| %>
+<div class="well">
 
-                <div class="control-group">
-                    <%= f.label :name, "Application Name", :class => "control-label" %>
-                    <div class="controls">
-                        <%= f.text_field :name, :placeholder => "Application Name" %>
-                    </div>
-                </div>
+    <legend>Create New Application</legend>
 
-                <div class="control-group">
-                    <%= f.label :description, "Description", :class => "control-label" %>
-                    <div class="controls">
-                        <%= f.text_area :description, :rows => 4, :class => "span6", :placeholder => "Enter a brief descriptions for the application" %>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <div class="controls">
-                        <%= submit_tag "Create", :class => "btn btn-primary", :id => "submit_button" %>
-                    </div>
-                </div>
-
-            <% end %>
-
-        </div>
+    <% if @application.errors.any? %>
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <% @application.errors.full_messages.each do |message| %>
+        <%= message %><br />
+        <% end %>
     </div>
+    <% end %>
+
+    <%= form_for @application, :url => create_application_path, :html => { :class => "form-horizontal" } do |f| %>
+
+        <div class="control-group">
+            <%= f.label :name, "Application Name", :class => "control-label" %>
+            <div class="controls">
+                <%= f.text_field :name, :placeholder => "Application Name" %>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <%= f.label :description, "Description", :class => "control-label" %>
+            <div class="controls">
+                <%= f.text_area :description, :rows => 4, :class => "span6", :placeholder => "Enter a brief descriptions for the application" %>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <%= submit_tag "Create", :class => "btn btn-primary", :id => "submit_button" %>
+            </div>
+        </div>
+
+    <% end %>
+
 </div>

@@ -8,11 +8,13 @@ class Application
     key :name,                  String
     key :api_key,               String
     key :description,           String
-    key :authorized_users_ids,  Array
+    key :authorized_user_ids,   Array
+    key :authorized_group_ids,  Array
 
     belongs_to :owner,          :class_name => "User"
 
-    many :authorized_users,     :class_name => "User", :in => :authorized_users_ids
+    many :authorized_users,     :class_name => "User", :in => :authorized_user_ids
+    many :authorized_groups,    :class_name => "UserGroup", :in => :authorized_group_ids
 
     validates :name,     :presence => true, :length => { :minimum => 3 }
     validates :owner,    :presence => true
@@ -22,11 +24,41 @@ class Application
     before_create :generate_key
 
     def self.visible_by_user( user )
-        condition = {}
+        if user.roles.include? :admin
+            self.where
+        else
+            conditions = []
 
-        condition[ :$or ] = [ { :owner => user.id }, { :authorized_users_ids => user.id } ] unless user.roles.include? :admin
+            # Search by owner and authorized users
+            conditions << { :owner => user.id }
+            conditions << { :authorized_users_ids => user.id }
 
-        self.where( condition )
+            # If the user matched any authorized groups, add them to the query
+            groups_for_user = UserGroup.where( { :user_ids => user.id } ).fields( :id ).collect { |g| g.id }
+            conditions << { :authorized_group_ids => { :$in => groups_for_user } } unless groups_for_user.empty?
+
+            self.where( { :$or => conditions } )
+        end
+    end
+
+    def user_count
+        count = authorized_users.length
+
+        authorized_groups.each do |group|
+            count += group.users.length
+        end
+
+        return count
+    end
+
+    def authorized?( user )
+        authorized = user.roles.include? :admin
+
+        authorized |= owner == user
+        authorized |= authorized_users.include?( user )
+        authorized |= ((authorized_groups.detect { |g| g.users.include? user }) != nil)
+
+        authorized
     end
 
 private

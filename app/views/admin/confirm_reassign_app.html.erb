@@ -1,0 +1,92 @@
+<%- content_for( :javascript ) do -%>
+<script type="text/javascript">
+$(function() {
+    var user_field = $("#user_auto_complete_field"),
+               url = user_field.attr("user-list-url"),
+            select = $("#user_id_field"),
+             timer = null;
+
+    function sanitize( string ) {
+        return string.replace(/\<.*?\>(.*?)\<\/.*?\>/g, "$1")
+    }
+
+    function updateUserList() {
+        $.ajax({
+            url: url,
+            data: { "term" : user_field.val() },
+            success: function( data, textStatus, jqXHR ) {
+                select.empty();
+                
+                $(data).each( function() {
+                    var label = sanitize( this["email"] );
+
+                    if ( typeof this["name"] !== "undefined" && this["name"].length != 0 ) {
+                        label = (sanitize( this["name"] ) + " &lt;" + label + "&gt;");
+                    }
+
+                    select.append("<option value='" + this["id"] + "'>" + label + "</option>");
+                });
+            }
+        })
+    }
+
+    select.change( function() {
+        console.info("here")
+    });
+
+    user_field.keyup( function( event ) {
+        var term = $(this).val(), 
+            key = event.keyCode,
+            ignoreKeys = [ 91, 55, 18, 55, 17, 55, 16, 55, 20, 37, 38, 39, 40 ];
+
+        if ( $.inArray( key, ignoreKeys ) == -1 ) {
+            if ( timer != null ) { clearTimeout( timer ); }
+
+            timer = setTimeout( updateUserList, 500);
+
+        }
+    });
+
+    if ( user_field.val() != null && user_field.val().length != 0 ) {
+        updateUserList();
+    }
+});
+</script>
+<%- end -%>
+
+<div class="container">
+    <div class="row">
+        <div class="span6 offset3 well">
+            <legend style="text-align: center;">Switch Owner For <%= @application.name %> ?</legend>
+
+            <p style="text-align: center;">
+                Switching ownership for an application may affect the previous owners ability to access and manage the application.
+            </p>
+
+            <%= form_for @application, :url => do_reassign_app_path, 
+                                       :html => { :class => "form-horizontal", :method => :put } do |f| %>
+
+            <div style="text-align: center;">
+                <p><input type="text" id="user_auto_complete_field" placeholder="Name or Email Address" user-list-url="<%= api_internal_user_list_url %>" /></p>
+
+                <select id="user_id_field" name="user_id" multiple="multiple" size="6">
+                    <option>text1</option>
+                    <option>text2</option>
+                    <option>text3</option>
+                    <option>text4</option>
+                    <option>text5</option>
+                </select>
+
+                <br /><br />
+            </div>
+
+            <div style="text-align: center;">
+                <%= submit_tag "Switch Owner", :class => "btn btn-danger", :id => "submit_button" %>
+                <%= link_to "Cancel", application_management_path, :class => [ "btn", "btn-primary" ] %>
+            </div>
+
+            <% end %>
+
+        </div>
+    </div>
+</div>

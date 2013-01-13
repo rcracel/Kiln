@@ -70,14 +70,16 @@ class Api::InternalController < ApplicationController
 
     # This method will match users ( first name, last name, and email ) to the term supplied on the
     # params via params[ :term ] and return a collection of objects with highlighted values. The terms
-    # parameter will be tokenized and or'd.
+    # parameter will be tokenized and or'd. In addition to supplying a term filter, an option parameter
+    # 'include_groups=true' can be supplied to include groups on the results.
     def user_list
         users = []
 
         if not params[ :term ].blank?
             terms      = params[ :term ].split(/\s+/)
             regex_term = Regexp.new( "(#{terms.join("|")})", "i" )
-            users      = User.where({
+
+            result     = User.where({
                 :$or => [
                     { :email => regex_term },
                     { :first_name => regex_term },
@@ -87,13 +89,25 @@ class Api::InternalController < ApplicationController
                 {
                     :id => u.id,
                     :name => "#{u.first_name} #{u.last_name}".strip.gsub( regex_term, '<b>\1</b>' ),
-                    :email => u.email.strip.gsub( regex_term, '<b>\1</b>' )
+                    :email => u.email.strip.gsub( regex_term, '<b>\1</b>' ),
+                    :type => u.class.name.downcase
                 }
+            end
+
+            if params[ :include_groups ] == "true"
+                result += UserGroup.where( :name => regex_term ).fields( :id, :name ).collect do |g|
+                    {
+                        :id => g.id,
+                        :name => g.name,
+                        :type => g.class.name.downcase
+                    }
+                end
+
             end
 
         end
 
-        render :json => users
+        render :json => result
     end
 
 private
@@ -106,6 +120,7 @@ private
         
         # Ensure we only retrieve application the current user has access to
         visible_app_ids = Application.visible_by_user( current_user ).fields( :id ).collect { |app| app.id.to_s }
+
         if not visible_app_ids.include? query_options[ :application_id ]
             query_options.delete( :application_id )
             cookies[ :selected_application_id ] = nil

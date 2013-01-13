@@ -1,0 +1,72 @@
+<table class="table table-condensed table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Users</th>
+            <th>Date Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @groups.each do |group| %>
+            <tr>
+                <td><%= group.name %></td>
+                <td><%= group.description %></td>
+                <td><%= group.users.length %></td>
+                <td><%= group.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+                <td>
+                    <%= link_to "Users", manage_group_users_path( group ), :class => [ 'btn', 'btn-mini' ] %>
+                    <%= link_to "Delete", delete_group_path( group ), :class => [ 'btn', 'btn-mini', 'btn-danger' ] %>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
+
+<div class="well">
+
+    <legend>Create New User Group</legend>
+
+    <% if @group.errors.any? %>
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <% @group.errors.full_messages.each do |message| %>
+        <%= message %><br />
+        <% end %>
+    </div>
+    <% end %>
+
+    <%= form_for @group, :url => do_create_group_path, :html => { :class => "form-horizontal" } do |f| %>
+
+        <div class="control-group">
+            <%= f.label :name, "User Group Name", :class => "control-label" %>
+            <div class="controls">
+                <%= f.text_field :name, :placeholder => "User Group Name" %>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <%= f.label :description, "Description", :class => "control-label" %>
+            <div class="controls">
+                <%= f.text_area :description, :rows => 4, :class => "span6", :placeholder => "Enter a brief descriptions for the user group" %>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <%= check_box_tag :go_to_users, true, :checked => true %> Take me to user assignments
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <%= submit_tag "Create", :class => "btn btn-primary", :id => "submit_button" %>
+            </div>
+        </div>
+
+    <% end %>
+
+</div>

@@ -64,7 +64,32 @@ Kiln::Application.routes.draw do
 
   match '/dashboard' => 'welcome#index', :as => :dashboard
 
-  match '/users' => 'admin#users', :as => :user_list, :via => :get
+  match '/admin' => 'admin#home', :as => :admin_home, :via => :get
+  match '/admin/users' => 'admin#users', :as => :user_management, :via => :get
+
+  # User Groups .............
+
+  match '/admin/groups' => 'admin#groups', :as => :group_management, :via => :get
+  match '/admin/groups' => 'admin#do_create_group', :as => :do_create_group, :via => :post
+
+  match '/admin/group/:id/delete' => 'admin#delete_group', :as => :delete_group, :via => :get
+  match '/admin/group/:id/delete' => 'admin#do_delete_group', :as => :do_delete_group, :via => :delete
+
+  match '/admin/group/:id/users' => 'admin#group_users', :as => :manage_group_users, :via => :get
+  match '/admin/group/:id/users' => 'admin#update_group_users', :as => :update_group_users, :via => :post
+
+  # Applications .............
+
+  match '/admin/apps' => 'admin#apps', :as => :application_management, :via => :get
+
+  match '/admin/app/:id/delete' => 'admin#confirm_delete_app', :as => :delete_app, :via => :get
+  match '/admin/app/:id/delete' => 'admin#do_delete_app', :as => :do_delete_app, :via => :delete
+
+  match '/admin/app/:id/reassign' => 'admin#confirm_reassign_app', :as => :reassign_app, :via => :get
+  match '/admin/app/:id/reassign' => 'admin#do_reassign_app', :as => :do_reassign_app, :via => :put
+
+  # Users ..............
+
   match '/users/:id/confirm_delete' => 'admin#confirm_delete_user', :as => :delete_user, :via => :get
   match '/users/:id/delete' => 'admin#do_delete_user', :as => :do_delete_user, :via => :get
   match '/users/:id/promote' => 'admin#promote_user', :as => :promote_user, :via => :get
@@ -88,6 +113,8 @@ Kiln::Application.routes.draw do
     match '/events/publish' => 'events#publish', :as => :event_publisher
 
 
+
+    # These require a logged in user in the session
 
     match '/internal/events/tail' => 'internal#events_tail', :as => :internal_events_tail
     match '/internal/events/head' => 'internal#events_head', :as => :internal_events_head
