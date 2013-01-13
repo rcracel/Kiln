@@ -3,10 +3,21 @@
         <div class="span6 offset3 well">
             <legend style="text-align: center;">Delete User <%= @user.email %> ?</legend>
 
-            <%= form_for @user, :url => delete_user_path, :html => { :class => "form-horizontal" } do |f| %>
+            <p style="text-align: center;" class="text-error">
+                <strong>Warning:</strong>
+                You are about to delete a user from the system. This action cannot be undone, are you sure you want to proceed?
+            </p>
+
+            <p style="text-align: center;">
+                Deleting a user will cause any assets belonging to this user to be assigned to you.
+            </p>
+
+            <br />
+
+            <%= form_for @user, :url => do_delete_user_path, :html => { :method => :delete, :class => "form-horizontal" } do |f| %>
 
             <div style="text-align: center;">
-                <%= link_to "Delete", do_delete_user_path( @user ), :class => [ "btn", "btn-danger" ] %>
+                <%= submit_tag "Delete", :class => "btn btn-danger", :id => "submit_button" %>
                 <%= link_to "Cancel", user_management_path, :class => [ "btn", "btn-primary" ] %>
             </div>
 

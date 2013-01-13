@@ -86,6 +86,18 @@ class AdminController < ApplicationController
         if user == current_user
             redirect_to user_management_path, :flash => { :warn => "You cannot delete yourself" }
         else
+            Application.where( { :owner_id => user.id } ).each do |a|
+                logger.warn "Changing ownership for #{a.name} to #{current_user.name}"
+                a.owner = current_user
+                a.save
+            end
+
+            UserGroup.where( { :user_ids => current_user.id } ).each do |g|
+                logger.warn "Removing user #{user.name} from group #{g.name}"
+                g.user_ids.delete( user.id )
+                g.save
+            end
+
             flash[ :error ] = "Could not delete selected user" unless user.delete
             redirect_to user_management_path
         end
