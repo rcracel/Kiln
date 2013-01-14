@@ -67,7 +67,7 @@ Kiln::Application.routes.draw do
   match '/dashboard' => 'welcome#index', :as => :dashboard
 
   match '/admin' => 'admin#home', :as => :admin_home, :via => :get
-  match '/admin/users' => 'admin#users', :as => :user_management, :via => :get
+  match '/admin/info' => 'admin#info', :as => :admin_info
 
   # User Groups .............
 
@@ -92,14 +92,19 @@ Kiln::Application.routes.draw do
 
   # Users ..............
 
-  match '/users/:id/confirm_delete' => 'admin#confirm_delete_user', :as => :delete_user, :via => :get
-  match '/users/:id/delete' => 'admin#do_delete_user', :as => :do_delete_user, :via => :delete
-  match '/users/:id/promote' => 'admin#promote_user', :as => :promote_user, :via => :get
-  match '/users/:id/demote' => 'admin#demote_user', :as => :demote_user, :via => :get
-  match '/users/:id/authorize' => 'admin#authorize_user', :as => :authorize_user, :via => :get
-  match '/users/:id/deauthorize' => 'admin#deauthorize_user', :as => :deauthorize_user, :via => :get
-  match '/users/new' => 'admin#create_user', :as => :create_user, :via => :get
-  match '/users/new' => 'admin#do_create_user', :as => :do_create_user, :via => :post
+  match '/admin/users' => 'admin#users', :as => :user_management, :via => :get
+
+
+
+  match '/admin/user/:id/confirm_delete' => 'admin#confirm_delete_user', :as => :delete_user, :via => :get
+  match '/admin/user/:id/delete' => 'admin#do_delete_user', :as => :do_delete_user, :via => :delete
+  match '/admin/user/:id/promote' => 'admin#promote_user', :as => :promote_user, :via => :get
+  match '/admin/user/:id/demote' => 'admin#demote_user', :as => :demote_user, :via => :get
+  match '/admin/user/:id/authorize' => 'admin#authorize_user', :as => :authorize_user, :via => :get
+  match '/admin/user/:id/deauthorize' => 'admin#deauthorize_user', :as => :deauthorize_user, :via => :get
+
+  match '/admin/user/new' => 'admin#create_user', :as => :create_user, :via => :get
+  match '/admin/user/new' => 'admin#do_create_user', :as => :do_create_user, :via => :post
 
   match '/events' => 'events#index', :as => :events
 
