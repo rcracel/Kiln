@@ -16,9 +16,9 @@ private
 
     def authorize
         if current_user.nil?
-            redirect_to login_url, alert: "You must loging to access the requested page"
+            redirect_to login_url, alert: "You must log in to access the requested page"
         elsif not current_user.roles.include? :user
-            redirect_to login_url, alert: "Your accound has not been authorized yet"
+            redirect_to login_url, alert: "Your account has not been authorized yet"
         end
     end
 
