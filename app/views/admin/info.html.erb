@@ -1,4 +1,82 @@
+<%- content_for( :javascript ) do -%>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load('visualization', '1.0', {'packages':['corechart']});
+    google.setOnLoadCallback( drawAll );
+
+    function drawAll() {
+        var data_table = google.visualization.arrayToDataTable([
+            [ <%= @stats['event_graph_data'].first.collect{ |h| "\"#{h}\"" }.join(',').html_safe %> ]
+            <% @stats['event_graph_data'].last( @stats['event_graph_data'].size - 1 ).each do |row| %>
+                ,["<%= row[0] %>", <%= row[1,row.size].join(',') %>]
+            <% end %>
+            ]), 
+            options = {
+                title : 'Events',
+                vAxis: {title: "New Events"},
+                
+                seriesType: "bars",
+                series: {5: {type: "line"}},
+                legend: {position: "bottom"}
+            }, 
+            chart = new google.visualization.ComboChart(document.getElementById('weekly_usage_graph'));
+
+        chart.draw(data_table, options);
+    }
+
+
+</script>
+<%- end -%>
+
 <div class="page-header">
-  <h1>System Info <small>Details for this server</small></h1>
+  <h1>System Info <small>Server Statistics and Configuration</small></h1>
 </div>
 
+<div class="row-fluid">
+
+    <div class="span3">
+        <dl class="dl-horizontal">
+
+            <dt>Events Stored</dt>
+            <dd>
+                <%= @stats['event_count'] %>
+            </dd>
+
+            <dt class="muted">today</dt>
+            <dd>
+                <%= @stats['event_count_today'] %>
+            </dd>
+
+            <dt class="muted">this week</dt>
+            <dd>
+                <%= @stats['event_count_past_week'] %>
+            </dd>
+
+            <dt class="muted">this month</dt>
+            <dd>
+                <%= @stats['event_count_past_month'] %>
+            </dd>
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>Applications</dt>
+            <dd>&nbsp;</dd>
+            <% @applications.each do |app| %>
+            <dt class="muted"><%= app.name %></dt>
+            <dd><%= app.events.count %></dd>
+            <% end %>
+        </dl>
+
+    </div>
+
+    <div class="span9">
+
+        <div id="weekly_usage_graph">
+
+        </div>
+
+
+
+
+    </div>
+
+</div>

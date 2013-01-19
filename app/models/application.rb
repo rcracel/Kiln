@@ -11,10 +11,15 @@ class Application
     key :authorized_user_ids,   Array
     key :authorized_group_ids,  Array
 
+    key :ip_blacklist,          Array
+    key :ip_whitelist,          Array
+
     belongs_to :owner,          :class_name => "User"
 
     many :authorized_users,     :class_name => "User", :in => :authorized_user_ids
     many :authorized_groups,    :class_name => "UserGroup", :in => :authorized_group_ids
+
+    many :events
 
     validates :name,     :presence => true, :length => { :minimum => 3 }
     validates :owner,    :presence => true

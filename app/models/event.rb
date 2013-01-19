@@ -2,7 +2,7 @@ class Event
 
     include MongoMapper::Document
     
-    attr_accessible :module_name, :log_level, :message, :thread_name, :stack_trace, :environment_name, :ip_address, :source
+    attr_accessible :module_name, :log_level, :message, :thread_name, :stack_trace, :environment_name, :ip_address, :source, :language, :metadata
 
     key :module_name,       String
     key :log_level,         String
@@ -13,11 +13,13 @@ class Event
     key :environment_name,  String
     key :ip_address,        String
     key :source,            String
+    key :language,          String
+
+    key :metadata,          Hash
 
     belongs_to :application
 
     timestamps!
-
 
     def self.module_name_list( application_id )
         options = { }
@@ -39,11 +41,21 @@ class Event
     def self.log_level_list( application_id, module_name, environment_name )
         options = { }
 
-        options[ :application_id ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?
+        options[ :application_id   ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?
         options[ :module_name      ] = module_name      unless module_name.nil?
         options[ :environment_name ] = environment_name unless environment_name.nil?
 
         Event.collection.distinct( :log_level, options )
+    end
+
+    def self.language_list( application_id, module_name, environment_name )
+        options = { }
+
+        options[ :application_id   ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?
+        options[ :module_name      ] = module_name      unless module_name.nil?
+        options[ :environment_name ] = environment_name unless environment_name.nil?
+
+        Event.collection.distinct( :language, options )
     end
 
     def self.find_for_user( user, options = {} )

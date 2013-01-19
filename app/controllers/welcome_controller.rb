@@ -47,8 +47,6 @@ class WelcomeController < ApplicationController
 
         end
 
-        logger.info "---- #{@chart_data[ :events_count_by_module ]} ----"
-
     end
 
 end

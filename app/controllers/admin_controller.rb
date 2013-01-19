@@ -5,6 +5,21 @@ class AdminController < ApplicationController
     def home
     end
 
+    def info
+        @stats = {}
+
+        now = Time.now
+
+        @stats['event_count']            = Event.count
+        @stats['event_count_today']      = Event.where({ :timestamp => { :$gte => (now.at_beginning_of_day) } }).count
+        @stats['event_count_past_week']  = Event.where({ :timestamp => { :$gte => (now - 1.week) } }).count
+        @stats['event_count_past_month'] = Event.where({ :timestamp => { :$gte => (now - 1.month) } }).count
+
+        @stats['event_graph_data'] = EventSearch.new.weekly_usage_map
+
+        @applications = Application.all
+    end
+
     ########################################
     # User Groups
 
