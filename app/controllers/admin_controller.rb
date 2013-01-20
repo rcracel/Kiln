@@ -15,7 +15,10 @@ class AdminController < ApplicationController
         @stats['event_count_past_week']  = Event.where({ :timestamp => { :$gte => (now - 1.week) } }).count
         @stats['event_count_past_month'] = Event.where({ :timestamp => { :$gte => (now - 1.month) } }).count
 
-        @stats['event_graph_data'] = EventSearch.new.weekly_usage_map
+        event_search = EventSearch.new
+
+        @stats['event_weekly_graph_data'] = event_search.weekly_usage_map
+        @stats['event_daily_graph_data']  = event_search.daily_usage_map
 
         @applications = Application.all
     end

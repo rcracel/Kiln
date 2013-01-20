@@ -5,15 +5,40 @@
     google.setOnLoadCallback( drawAll );
 
     function drawAll() {
+        drawWeeklyEventsChart();
+        drawDaylyEventsChart();
+    }
+
+    function drawDaylyEventsChart() {
         var data_table = google.visualization.arrayToDataTable([
-            [ <%= @stats['event_graph_data'].first.collect{ |h| "\"#{h}\"" }.join(',').html_safe %> ]
-            <% @stats['event_graph_data'].last( @stats['event_graph_data'].size - 1 ).each do |row| %>
+            [ <%= @stats['event_daily_graph_data'].first.collect{ |h| "\"#{h}\"" }.join(',').html_safe %> ]
+            <% @stats['event_daily_graph_data'].last( @stats['event_daily_graph_data'].size - 1 ).each do |row| %>
                 ,["<%= row[0] %>", <%= row[1,row.size].join(',') %>]
             <% end %>
             ]), 
             options = {
-                title : 'Events',
-                vAxis: {title: "New Events"},
+                title : 'Date',
+                vAxis: { title: "New Events", minValue: 0, maxValue: 4 },
+                
+                seriesType: "bars",
+                series: { 5: { type: "line" } },
+                legend: { position: "bottom" }
+            }, 
+            chart = new google.visualization.ComboChart(document.getElementById('daily_usage_graph'));
+
+        chart.draw(data_table, options); 
+    }
+
+    function drawWeeklyEventsChart() {
+        var data_table = google.visualization.arrayToDataTable([
+            [ <%= @stats['event_weekly_graph_data'].first.collect{ |h| "\"#{h}\"" }.join(',').html_safe %> ]
+            <% @stats['event_weekly_graph_data'].last( @stats['event_weekly_graph_data'].size - 1 ).each do |row| %>
+                ,["<%= row[0] %>", <%= row[1,row.size].join(',') %>]
+            <% end %>
+            ]), 
+            options = {
+                title : 'Previous <%= @stats['event_weekly_graph_data'].length - 1 %> weeks',
+                vAxis: {title: "New Events", minValue: 0, maxValue : 4 },
                 
                 seriesType: "bars",
                 series: {5: {type: "line"}},
@@ -21,7 +46,7 @@
             }, 
             chart = new google.visualization.ComboChart(document.getElementById('weekly_usage_graph'));
 
-        chart.draw(data_table, options);
+        chart.draw(data_table, options);        
     }
 
 
@@ -70,11 +95,13 @@
 
     <div class="span9">
 
-        <div id="weekly_usage_graph">
+        <div id="daily_usage_graph">
 
         </div>
 
+        <div id="weekly_usage_graph">
 
+        </div>
 
 
     </div>
