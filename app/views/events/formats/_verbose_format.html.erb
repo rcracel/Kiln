@@ -4,7 +4,15 @@
         <%= event.timestamp.strftime("%Y-%m-%d %H:%M:%S %z") unless event.timestamp.nil? %>
     </div> 
 
-    <div class='event-level'>Log Level: <%= event.log_level %></div> 
+    <div class='event-level'>
+        Log Level:
+        <% if not event.stack_trace.blank? %>
+            <span data-trigger="stacktrace" data-url="<%= api_internal_event_stacktrace_path( event.id ) %>">
+                <%= image_tag "bug.png" %>
+            </span>
+        <% end %>
+        <%= event.log_level %>
+    </div> 
 
     <div class='event-app-name'>Application Name: <%= event.application.try(:name) %></div> 
 
