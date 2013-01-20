@@ -90,6 +90,16 @@
             <dd><%= app.events.count %></dd>
             <% end %>
         </dl>
+        <dl class="dl-horizontal">
+            <dt>Configuration</dt>
+            <dd>&nbsp;</dd>
+            <dt class="muted">Site administrator</dt>
+            <dd><%= APP_CONFIG['site']['admin'] %></dd>
+            <dt class="muted">Site email</dt>
+            <dd><%= APP_CONFIG['site']['admin_email'] %></dd>
+            <dt class="muted">Site URL</dt>
+            <dd><%= APP_CONFIG['site']['url'] %></dd>
+        </dl>
 
     </div>
 
