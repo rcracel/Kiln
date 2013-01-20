@@ -252,4 +252,22 @@ class AdminController < ApplicationController
         end
     end
 
+    ########################################
+    # Applications
+
+    def do_truncate_events
+        begin
+            date = Time.strptime( params[ :truncate_timestamp ], '%m-%d-%Y' )
+
+            Event.delete_all( :timestamp => { :$lt => date } )
+
+            render "truncate_events"
+        rescue Exception => exc
+            logger.error("Message for the log file #{exc.message}")
+            flash.now[ :error ] = "The date you specified is not valid (#{params[ :truncate_timestamp ]}), please specify a valid date"
+            render "truncate_events"
+        end
+    end
+
+
 end

@@ -94,6 +94,10 @@ Kiln::Application.routes.draw do
 
   match '/admin/users' => 'admin#users', :as => :user_management, :via => :get
 
+  # Events ..............
+
+  match '/admin/events/truncate' => 'admin#truncate_events', :as => :truncate_events_all_apps, :via => :get
+  match '/admin/events/truncate' => 'admin#do_truncate_events', :as => :do_truncate_events_all_apps, :via => :post
 
 
   match '/admin/user/:id/confirm_delete' => 'admin#confirm_delete_user', :as => :delete_user, :via => :get

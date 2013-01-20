@@ -22,3 +22,9 @@ body {
     padding-top: 54px;
 }
 
+.input-append.date.centered {
+    display:block; 
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align: center;
+}
