@@ -5,12 +5,12 @@
     </div> 
 
     <div class='event-level'>
+        <%= event.log_level %>
         <% if not event.stack_trace.blank? %>
             <span data-trigger="stacktrace" data-url="<%= api_internal_event_stacktrace_path( event.id ) %>">
                 <%= image_tag "bug.png" %>
             </span>
         <% end %>
-        <%= event.log_level %>
     </div>
 
     <div class='event-app-name'><%= event.application.try(:name) %></div>
