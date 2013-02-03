@@ -2,7 +2,7 @@ class Event
 
     include MongoMapper::Document
     
-    attr_accessible :module_name, :log_level, :message, :thread_name, :stack_trace, :environment_name, :ip_address, :source, :language, :metadata
+    attr_accessible :module_name, :log_level, :message, :thread_name, :stack_trace, :environment_name, :ip_address, :source, :platform, :metadata
 
     key :module_name,       String
     key :log_level,         String
@@ -13,7 +13,7 @@ class Event
     key :environment_name,  String
     key :ip_address,        String
     key :source,            String
-    key :language,          String
+    key :platform,          String
 
     key :metadata,          Hash
 

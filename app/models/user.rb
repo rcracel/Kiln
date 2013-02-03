@@ -14,6 +14,8 @@ class User
 
     key :timezone,        String
 
+    one :password_reset_token
+
     timestamps!
 
     validates :email,     :presence => true, :length => { :minimum => 6 }, :uniqueness => true

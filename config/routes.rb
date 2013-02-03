@@ -55,6 +55,12 @@ Kiln::Application.routes.draw do
   match '/signup' => 'users#signup', :as => :signup, :via => :get
   match '/signup' => 'users#do_signup', :as => :do_signup, :via => :post
 
+  match '/forgot' => 'users#forgot_password', :as => :forgot_password, :via => :get  
+  match '/forgot' => 'users#do_forgot_password', :as => :do_forgot_password, :via => :post
+
+  match '/reset'  => 'users#reset_password', :as => :reset_password, :via => :get
+  match '/reset'  => 'users#do_reset_password', :as => :do_reset_password, :via => :post
+
   match '/login' => 'sessions#new', :as => :login
 
   match '/logout' => 'sessions#destroy', :as => :logout
