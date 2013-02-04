@@ -11,8 +11,42 @@
  *= require_self
  *= require ./bootstrap_and_overrides
  */
+@import "_mixins";
+
+$shadow-color: #999;
+
+@mixin default-shadow {
+    @include box-shadow(2px, 2px, 5px, $shadow-color);
+}
 
 body {
     padding-top: 54px;
-    // background-image: url(image_path('beige031.jpg'));
+    background-image: url(image_path('brushed_alu.png'));
 }
+
+table {
+    background-color: #F0F0F0 !important;
+    @include default-shadow();
+}
+
+.page-header {
+    border-bottom-color: #CCC !important;
+}
+
+.graph-container {
+    @include rounded( 10px );
+    overflow: hidden;
+    margin-bottom: 8px;
+    background-color: #FFF;
+    @include default-shadow();
+}
+
+.well, .hero-unit {
+    border: 1px solid #CCC !important;
+    @include default-shadow();
+    @include transparent( #f5f5f5, 0.8 );
+}
+
+
+
+
