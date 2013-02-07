@@ -1,5 +1,7 @@
 class SystemController < ApplicationController
 
+    skip_before_filter :authorize, :only => [ :status ]
+
     def status
         status_object = {}
 
