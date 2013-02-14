@@ -21,7 +21,7 @@ class Event
 
     timestamps!
 
-    def self.module_name_list( application_id )
+    def self.module_name_list( application_id = nil )
         options = { }
 
         options[ :application_id ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?
@@ -29,7 +29,7 @@ class Event
         Event.collection.distinct( :module_name, options )
     end
 
-    def self.environment_name_list( application_id, module_name )
+    def self.environment_name_list( application_id = nil, module_name = nil)
         options = { }
 
         options[ :application_id ] = BSON::ObjectId.from_string( application_id ) unless application_id.nil?

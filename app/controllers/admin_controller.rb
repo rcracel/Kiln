@@ -255,18 +255,52 @@ class AdminController < ApplicationController
     ########################################
     # Applications
 
-    def do_truncate_events
+    def truncate_events
+        @applications = Application.all
+        @environments = Event.environment_name_list
+        @modules      = Event.module_name_list
+    end
+
+    def confirm_truncate_events
+        @selected_application_name = if params[ :application_id ].blank?
+            "all applications"
+        else
+            Application.find( params[ :application_id ] ).name
+        end
+
+        query_options = {}
+
         begin
-            date = Time.strptime( params[ :truncate_timestamp ], '%m-%d-%Y' )
+            query_options[ :application_id ]   = params[ :application_id ]   unless params[ :application_id ].blank?
+            query_options[ :module_name ]      = params[ :module_name ]      unless params[ :module_name ].blank?
+            query_options[ :environment_name ] = params[ :environment_name ] unless params[ :environment_name ].blank?
+            query_options[ :timestamp ]        = { :$lte => Time.strptime( params[ :truncate_timestamp ], '%m-%d-%Y' ) }
 
-            Event.delete_all( :timestamp => { :$lt => date } )
+            @event_count  = Event.where( query_options ).count
 
-            render "truncate_events"
+            render "confirm_truncate_events"
         rescue Exception => exc
             logger.error("Message for the log file #{exc.message}")
-            flash.now[ :error ] = "The date you specified is not valid (#{params[ :truncate_timestamp ]}), please specify a valid date"
-            render "truncate_events"
+            flash[ :error ] = "The date you specified is not valid (#{params[ :truncate_timestamp ]}), please specify a valid date"
+            redirect_to truncate_events_all_apps_path
         end
+    end
+
+    def do_truncate_events
+        begin
+            query_options = {}
+
+            query_options[ :application_id ]   = params[ :application_id ]   unless params[ :application_id ].blank?
+            query_options[ :module_name ]      = params[ :module_name ]      unless params[ :module_name ].blank?
+            query_options[ :environment_name ] = params[ :environment_name ] unless params[ :environment_name ].blank?
+            query_options[ :timestamp ]        = { :$lte => Time.strptime( params[ :truncate_timestamp ], '%m-%d-%Y' ) }
+
+            Event.delete_all( query_options )
+        rescue Exception => exc
+            logger.error("Message for the log file #{exc.message}")
+            flash[ :error ] = "The date you specified is not valid (#{params[ :truncate_timestamp ]}), please specify a valid date"
+        end        
+        redirect_to truncate_events_all_apps_path
     end
 
 

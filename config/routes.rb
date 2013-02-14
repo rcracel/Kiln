@@ -103,6 +103,7 @@ Kiln::Application.routes.draw do
   # Events ..............
 
   match '/admin/events/truncate' => 'admin#truncate_events', :as => :truncate_events_all_apps, :via => :get
+  match '/admin/events/confirm_truncate' => 'admin#confirm_truncate_events', :as => :confirm_truncate_events_all_apps, :via => :post
   match '/admin/events/truncate' => 'admin#do_truncate_events', :as => :do_truncate_events_all_apps, :via => :post
 
 

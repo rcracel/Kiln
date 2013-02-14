@@ -1,0 +1,48 @@
+<%- content_for( :javascript ) do -%>
+<script type="text/javascript">
+$(function() {
+    $('#truncate_timestamp').datepicker({
+        format: 'mm-dd-yyyy'
+    });
+});
+</script>
+<%- end -%>
+
+<div class="page-header">
+    <h1>Truncate Events <small>to free up disk space or improve database performance</small></h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="span6 offset3 well">
+            <legend style="text-align: center;">Confirm truncation of events</legend>
+
+            <p style="text-align: center;" class="text-info">
+                If you continue, <%= @event_count %> events will be deleted.
+            </p>
+
+            <p style="text-align: center;" class="text-error">
+                <strong>Warning:</strong>
+                This will delete <em>all events</em> for <em><%= @selected_application_name %></em> prior to the date specified. This action cannot be undone.
+            </p>
+
+
+            <%= form_tag do_truncate_events_all_apps_path, :method => :post, :class => "form-horizontal" do %>
+
+                <%= hidden_field_tag :application_id, params[ :application_id ] %>
+                <%= hidden_field_tag :module_name, params[ :module_name ] %>
+                <%= hidden_field_tag :environment_name, params[ :environment_name ] %>
+                <%= hidden_field_tag :truncate_timestamp, params[ :truncate_timestamp ] %>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <%= link_to "Cancel", admin_info_path, :class => [ :btn ] %>
+                        <%= submit_tag "Truncate", :class => [ 'btn', 'btn-danger'] %>
+                    </div>
+                </div>
+
+            <% end %>
+
+        </div>
+    </div>
+</div>
